@@ -9,7 +9,7 @@
 #define BLOCK_NO 50 //number of blocks
 #define FLAME_RATE 100 //rerender after this FLAME_RATE milliseconds
 #define WINDOW_SIZE 600 //window size
-#define BOUNDARY 500.0 //area boundary
+#define BOUNDARY 200.0 //area boundary
 #define REPEL_WALL_WEIGHT 30.0 //repel force weight
 #define ALPHA_1 0.5 //rule1 weight
 #define ALPHA_2 1.1 //rule2 weight

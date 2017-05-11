@@ -51,7 +51,7 @@ void BaseBoid::drawBaseBoid() //TODO:’¹‚ç‚µ‚­
 	glTranslated(x, y, z);
 	glRotated(radianToDegree(angleY), 0.0, -1.0, 0.0);
 	glRotated(radianToDegree(angleZ), 0.0, 0.0, 1.0);
-	glutSolidCone(-0.4 * BOID_SIZE * sqrt(3.0) / 2.0, BOID_SIZE, 20, 20);
+	glutSolidCone(-0.4 * BOID_SIZE * sqrt(3.0) / 2.0, BOID_SIZE, 10, 10);
 	glPopMatrix();
 }
 

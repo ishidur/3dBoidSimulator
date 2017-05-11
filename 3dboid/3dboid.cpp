@@ -95,20 +95,20 @@ std::vector<Block> blocks;
 //this function needs grids
 std::vector<int> getAroundGridBoids(int id, int grid_x, int grid_y, int grid_z)
 {
-	std::vector<int> indexes=grids[grid_x][grid_y][grid_z].boidIndexes;
-//	for (int i = -1; i <= 1; ++i)
-//	{
-//		for (int j = -1; j <= 1; ++j)
-//		{
-//			for (int k = -1; k <= 1; ++k)
-//			{
-//				indexes.insert(indexes.end(), grids[grid_x + i][grid_y + j][grid_z + k].boidIndexes.begin(), grids[grid_x + i][grid_y + k][grid_z + j].boidIndexes.end());
-//			}
-//		}
-//	}
-//	auto result = remove(indexes.begin(), indexes.end(), id);
-//	auto result2 = unique(indexes.begin(), result);
-//	indexes.erase(result2, indexes.end());
+	std::vector<int> indexes = grids[grid_x][grid_y][grid_z].boidIndexes;
+	//	for (int i = -1; i <= 1; ++i)
+	//	{
+	//		for (int j = -1; j <= 1; ++j)
+	//		{
+	//			for (int k = -1; k <= 1; ++k)
+	//			{
+	//				indexes.insert(indexes.end(), grids[grid_x + i][grid_y + j][grid_z + k].boidIndexes.begin(), grids[grid_x + i][grid_y + k][grid_z + j].boidIndexes.end());
+	//			}
+	//		}
+	//	}
+	//	auto result = remove(indexes.begin(), indexes.end(), id);
+	//	auto result2 = unique(indexes.begin(), result);
+	//	indexes.erase(result2, indexes.end());
 	return indexes;
 }
 
@@ -242,36 +242,37 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 	return boid;
 }
 
-//
-//void drawWall()
-//{
-//	glColor3d(0.5, 0.5, 0.5);
-//	double boundary = BOUNDARY;
-//	glBegin(GL_POLYGON);
-//	glVertex2d(boundary, boundary);
-//	glVertex2d(boundary - WALL_SIZE, boundary);
-//	glVertex2d(boundary - WALL_SIZE, -boundary);
-//	glVertex2d(boundary, -boundary);
-//	glEnd();
-//	glBegin(GL_POLYGON);
-//	glVertex2d(boundary, boundary);
-//	glVertex2d(boundary, boundary - WALL_SIZE);
-//	glVertex2d(-boundary, boundary - WALL_SIZE);
-//	glVertex2d(-boundary, boundary);
-//	glEnd();
-//	glBegin(GL_POLYGON);
-//	glVertex2d(-boundary, -boundary);
-//	glVertex2d(-boundary, -boundary + WALL_SIZE);
-//	glVertex2d(boundary, -boundary + WALL_SIZE);
-//	glVertex2d(boundary, -boundary);
-//	glEnd();
-//	glBegin(GL_POLYGON);
-//	glVertex2d(-boundary, -boundary);
-//	glVertex2d(-boundary + WALL_SIZE, -boundary);
-//	glVertex2d(-boundary + WALL_SIZE, boundary);
-//	glVertex2d(-boundary, boundary);
-//	glEnd();
-//}
+/*
+void drawWall()
+{
+	glColor3d(0.5, 0.5, 0.5);
+	double boundary = BOUNDARY;
+	glBegin(GL_POLYGON);
+	glVertex2d(boundary, boundary);
+	glVertex2d(boundary - WALL_SIZE, boundary);
+	glVertex2d(boundary - WALL_SIZE, -boundary);
+	glVertex2d(boundary, -boundary);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2d(boundary, boundary);
+	glVertex2d(boundary, boundary - WALL_SIZE);
+	glVertex2d(-boundary, boundary - WALL_SIZE);
+	glVertex2d(-boundary, boundary);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2d(-boundary, -boundary);
+	glVertex2d(-boundary, -boundary + WALL_SIZE);
+	glVertex2d(boundary, -boundary + WALL_SIZE);
+	glVertex2d(boundary, -boundary);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2d(-boundary, -boundary);
+	glVertex2d(-boundary + WALL_SIZE, -boundary);
+	glVertex2d(-boundary + WALL_SIZE, boundary);
+	glVertex2d(-boundary, boundary);
+	glEnd();
+}
+*/
 
 //this function needs grids
 void createGrids()
@@ -415,38 +416,83 @@ int findDuplicateBlock(double x, double y, double z)
 //	/* モデルビュー変換行列の保存 */
 //	glPushMatrix();
 //
+//	glTranslated(-BOUNDARY, 0.0, 0.0);
 //	/* 図形の回転 */
-//	glRotated(double(r), 0.0, 1.0, 0.0);
-//
+//	glRotated(double(r * 10), 0.0, 1.0, 0.0);
 //	/* 図形の色 (赤) */
 //	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
 //
 //	/* 図形の描画 */
-//	glutSolidCone(1.0, 0.6, 50, 50);
-//
-//	/* 二つ目の図形の描画 */
-//	glPushMatrix();
-//	glTranslated(1.0, 1.0, 1.0);
-//	glRotated(double(2 * r), 0.0, 1.0, 0.0);
-//	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, blue);
+//	glutSolidCone(100.0, 100.0, 50, 50);
+//	/* モデルビュー変換行列の復帰 */
 //	glPopMatrix();
+//	/* モデルビュー変換行列の保存 */
+//	glPushMatrix();
 //
+//	glTranslated(BOUNDARY, 0.0, 0.0);
+//	/* 図形の回転 */
+//	glRotated(double(r * 10), 0.0, 1.0, 0.0);
+//	/* 図形の色 (赤) */
+//	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+//
+//	/* 図形の描画 */
+//	glutSolidCone(100.0, 100.0, 50, 50);
+//	/* モデルビュー変換行列の復帰 */
+//	glPopMatrix();
+//	/* モデルビュー変換行列の保存 */
+//	glPushMatrix();
+//
+//	glTranslated(0.0, BOUNDARY, 0.0);
+//	/* 図形の回転 */
+//	glRotated(double(r * 10), 0.0, 1.0, 0.0);
+//	/* 図形の色 (赤) */
+//	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+//
+//	/* 図形の描画 */
+//	glutSolidCone(100.0, 100.0, 50, 50);
+//	/* モデルビュー変換行列の復帰 */
+//	glPopMatrix();
+//	/* モデルビュー変換行列の保存 */
+//	glPushMatrix();
+//
+//	glTranslated(0.0, -BOUNDARY, 0.0);
+//	/* 図形の回転 */
+//	glRotated(double(r * 10), 0.0, 1.0, 0.0);
+//	/* 図形の色 (赤) */
+//	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+//
+//	/* 図形の描画 */
+//	glutSolidCone(100.0, 100.0, 50, 50);
+//	/* モデルビュー変換行列の復帰 */
+//	glPopMatrix();
+//	/* モデルビュー変換行列の保存 */
+//	glPushMatrix();
+//
+//	glTranslated(0.0, 0.0, -BOUNDARY);
+//	/* 図形の回転 */
+//	glRotated(double(r * 10), 0.0, 1.0, 0.0);
+//	/* 図形の色 (赤) */
+//	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+//
+//	/* 図形の描画 */
+//	glutSolidCone(100.0, 100.0, 50, 50);
 //	/* モデルビュー変換行列の復帰 */
 //	glPopMatrix();
 //
 //	glutSwapBuffers();
 //
 //	/* 一周回ったら回転角を 0 に戻す */
-//	if (++r >= 360) r = 0;
+//	if (++r >= 36) r = 0;
 //}
+
 
 void display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	/* 光源の位置設定 */
 	glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
 	glLightfv(GL_LIGHT1, GL_POSITION, light1pos);
-	//	coloringGrids();
 	//	drawWall();
 	for (auto boid : boids)
 	{
@@ -465,65 +511,82 @@ void display(void)
 
 void resize(int w, int h)
 {
+	//	glViewport(0, 0, w, h);
+	//
+	//	/* 透視変換行列の設定 */
+	//	glMatrixMode(GL_PROJECTION);
+	//	glLoadIdentity();
+	//	gluPerspective(30.0, double(w) / double(h), -w / WINDOW_SIZE * BOUNDARY, w / WINDOW_SIZE * BOUNDARY);
+	//	gluPerspective(30.0, double(w) / double(h), 1.0, 100.0);
+	//	glOrtho(-w / WINDOW_SIZE * BOUNDARY, w / WINDOW_SIZE * BOUNDARY, -h / WINDOW_SIZE * BOUNDARY, h / WINDOW_SIZE * BOUNDARY, -h / WINDOW_SIZE * BOUNDARY, h / WINDOW_SIZE * BOUNDARY);
+	//
+	//	/* モデルビュー変換行列の設定 */
+	//	glMatrixMode(GL_MODELVIEW);
+	//	glLoadIdentity();
+	//	gluLookAt(1.0, 1.0, -w / WINDOW_SIZE * BOUNDARY, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+
 	glViewport(0, 0, w, h);
 
 	/* 透視変換行列の設定 */
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(30.0, double(w) / double(h), -w / WINDOW_SIZE * BOUNDARY, w / WINDOW_SIZE * BOUNDARY);
-	glOrtho(-w / WINDOW_SIZE * BOUNDARY, w / WINDOW_SIZE * BOUNDARY, -h / WINDOW_SIZE * BOUNDARY, h / WINDOW_SIZE * BOUNDARY, -h / WINDOW_SIZE * BOUNDARY, h / WINDOW_SIZE * BOUNDARY);
+	//	gluPerspective(30.0, (double)w / (double)h, 1.0, 100.0);
+	gluPerspective(60.0, double(w) / double(h), 1.0, w / WINDOW_SIZE * BOUNDARY * 4.0);
+	//	glOrtho(-w / WINDOW_SIZE * BOUNDARY, w / WINDOW_SIZE * BOUNDARY, -h / WINDOW_SIZE * BOUNDARY, h / WINDOW_SIZE * BOUNDARY, -1.0, 1.0);
 
 	/* モデルビュー変換行列の設定 */
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(1.0, 1.0, -w / WINDOW_SIZE * BOUNDARY, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	//	gluLookAt(3.0, 4.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	gluLookAt(0.0, 0.0, w / WINDOW_SIZE * BOUNDARY * 2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 }
 
-//
-//void mouse(int button, int state, int x, int y)
-//{
-//	double pos_x = BOUNDARY * (double(x) - WINDOW_SIZE / 2.0) / double(WINDOW_SIZE / 2.0);
-//	double pos_y = -BOUNDARY * (double(y) - WINDOW_SIZE / 2.0) / double(WINDOW_SIZE / 2.0);
-//	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
-//	{
-//		int index = findDuplicateBlock(pos_x, pos_y);
-//		if (index != -1)
-//		{
-//			std::cout << "exist" << index << std::endl;
-//			removeBlock(index, pos_x, pos_y);
-//		}
-//		else
-//		{
-//			blocks.push_back(Block(pos_x, pos_y, BLOCK_SIZE));
-//			whereBlock(blocks.size() - 1, blocks[blocks.size() - 1].x, blocks[blocks.size() - 1].y);
-//		}
-//	}
-//	if (button == GLUT_RIGHT_BUTTON)
-//	{
-//		if (state == GLUT_DOWN)
-//		{
-//			std::cout << "pressing" << std::endl;
-//			mouseX = pos_x;
-//			mouseY = pos_y;
-//			isPress = true;
-//		}
-//		else
-//		{
-//			isPress = false;
-//		}
-//	}
-//}
-//
-//void motion(int x, int y)
-//{
-//	if (isPress)
-//	{
-//		double pos_x = BOUNDARY * (double(x) - WINDOW_SIZE / 2.0) / double(WINDOW_SIZE / 2.0);
-//		double pos_y = -BOUNDARY * (double(y) - WINDOW_SIZE / 2.0) / double(WINDOW_SIZE / 2.0);
-//		mouseX = pos_x;
-//		mouseY = pos_y;
-//	}
-//}
+/*
+void mouse(int button, int state, int x, int y)
+{
+	double pos_x = BOUNDARY * (double(x) - WINDOW_SIZE / 2.0) / double(WINDOW_SIZE / 2.0);
+	double pos_y = -BOUNDARY * (double(y) - WINDOW_SIZE / 2.0) / double(WINDOW_SIZE / 2.0);
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+	{
+		int index = findDuplicateBlock(pos_x, pos_y);
+		if (index != -1)
+		{
+			std::cout << "exist" << index << std::endl;
+			removeBlock(index, pos_x, pos_y);
+		}
+		else
+		{
+			blocks.push_back(Block(pos_x, pos_y, BLOCK_SIZE));
+			whereBlock(blocks.size() - 1, blocks[blocks.size() - 1].x, blocks[blocks.size() - 1].y);
+		}
+	}
+	if (button == GLUT_RIGHT_BUTTON)
+	{
+		if (state == GLUT_DOWN)
+		{
+			std::cout << "pressing" << std::endl;
+			mouseX = pos_x;
+			mouseY = pos_y;
+			isPress = true;
+		}
+		else
+		{
+			isPress = false;
+		}
+	}
+}
+
+void motion(int x, int y)
+{
+	if (isPress)
+	{
+		double pos_x = BOUNDARY * (double(x) - WINDOW_SIZE / 2.0) / double(WINDOW_SIZE / 2.0);
+		double pos_y = -BOUNDARY * (double(y) - WINDOW_SIZE / 2.0) / double(WINDOW_SIZE / 2.0);
+		mouseX = pos_x;
+		mouseY = pos_y;
+	}
+}
+*/
 
 void key(unsigned char key, int x, int y)
 {
@@ -572,7 +635,7 @@ void timer(int value)
 
 void init()
 {
-	glClearColor(0.0, 0.0, 1.0, 1.0);
+	glClearColor(0.0, 0.0, 1.0, 0.5);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -589,7 +652,10 @@ void init()
 int main(int argc, char* argv[])
 {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
+	glutInitWindowSize(WINDOW_SIZE, WINDOW_SIZE);
+//	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
+	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH);
+
 	glutCreateWindow(argv[0]);
 	//	glutMouseFunc(mouse);
 	glutKeyboardFunc(key);

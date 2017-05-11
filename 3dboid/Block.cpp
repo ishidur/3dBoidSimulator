@@ -22,7 +22,7 @@ void Block::drawBlock()
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 	glPushMatrix();
 	glTranslated(x, y, z);
-	glutSolidSphere(r, 30, 30);
+	glutSolidSphere(r, 10, 10);
 	glPopMatrix();
 }
 
