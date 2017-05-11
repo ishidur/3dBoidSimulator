@@ -95,6 +95,7 @@ std::vector<Block> blocks;
 //this function needs grids
 std::vector<int> getAroundGridBoids(int id, int grid_x, int grid_y, int grid_z)
 {
+	//something went wrong
 	std::vector<int> indexes = grids[grid_x][grid_y][grid_z].boidIndexes;
 	//	for (int i = -1; i <= 1; ++i)
 	//	{
@@ -402,88 +403,89 @@ int findDuplicateBlock(double x, double y, double z)
 	}
 	return -1;
 }
+/*
+void display()
+{
+	static int r = 0; /* 回転角 #1#
 
-//void display()
-//{
-//	static int r = 0; /* 回転角 */
-//
-//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//
-//	/* 光源の位置設定 */
-//	glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
-//	glLightfv(GL_LIGHT1, GL_POSITION, light1pos);
-//
-//	/* モデルビュー変換行列の保存 */
-//	glPushMatrix();
-//
-//	glTranslated(-BOUNDARY, 0.0, 0.0);
-//	/* 図形の回転 */
-//	glRotated(double(r * 10), 0.0, 1.0, 0.0);
-//	/* 図形の色 (赤) */
-//	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
-//
-//	/* 図形の描画 */
-//	glutSolidCone(100.0, 100.0, 50, 50);
-//	/* モデルビュー変換行列の復帰 */
-//	glPopMatrix();
-//	/* モデルビュー変換行列の保存 */
-//	glPushMatrix();
-//
-//	glTranslated(BOUNDARY, 0.0, 0.0);
-//	/* 図形の回転 */
-//	glRotated(double(r * 10), 0.0, 1.0, 0.0);
-//	/* 図形の色 (赤) */
-//	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
-//
-//	/* 図形の描画 */
-//	glutSolidCone(100.0, 100.0, 50, 50);
-//	/* モデルビュー変換行列の復帰 */
-//	glPopMatrix();
-//	/* モデルビュー変換行列の保存 */
-//	glPushMatrix();
-//
-//	glTranslated(0.0, BOUNDARY, 0.0);
-//	/* 図形の回転 */
-//	glRotated(double(r * 10), 0.0, 1.0, 0.0);
-//	/* 図形の色 (赤) */
-//	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
-//
-//	/* 図形の描画 */
-//	glutSolidCone(100.0, 100.0, 50, 50);
-//	/* モデルビュー変換行列の復帰 */
-//	glPopMatrix();
-//	/* モデルビュー変換行列の保存 */
-//	glPushMatrix();
-//
-//	glTranslated(0.0, -BOUNDARY, 0.0);
-//	/* 図形の回転 */
-//	glRotated(double(r * 10), 0.0, 1.0, 0.0);
-//	/* 図形の色 (赤) */
-//	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
-//
-//	/* 図形の描画 */
-//	glutSolidCone(100.0, 100.0, 50, 50);
-//	/* モデルビュー変換行列の復帰 */
-//	glPopMatrix();
-//	/* モデルビュー変換行列の保存 */
-//	glPushMatrix();
-//
-//	glTranslated(0.0, 0.0, -BOUNDARY);
-//	/* 図形の回転 */
-//	glRotated(double(r * 10), 0.0, 1.0, 0.0);
-//	/* 図形の色 (赤) */
-//	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
-//
-//	/* 図形の描画 */
-//	glutSolidCone(100.0, 100.0, 50, 50);
-//	/* モデルビュー変換行列の復帰 */
-//	glPopMatrix();
-//
-//	glutSwapBuffers();
-//
-//	/* 一周回ったら回転角を 0 に戻す */
-//	if (++r >= 36) r = 0;
-//}
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	/* 光源の位置設定 #1#
+	glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
+	glLightfv(GL_LIGHT1, GL_POSITION, light1pos);
+
+	/* モデルビュー変換行列の保存 #1#
+	glPushMatrix();
+
+	glTranslated(-BOUNDARY, 0.0, 0.0);
+	/* 図形の回転 #1#
+	glRotated(double(r * 10), 0.0, 1.0, 0.0);
+	/* 図形の色 (赤) #1#
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+
+	/* 図形の描画 #1#
+	glutSolidCone(100.0, 100.0, 50, 50);
+	/* モデルビュー変換行列の復帰 #1#
+	glPopMatrix();
+	/* モデルビュー変換行列の保存 #1#
+	glPushMatrix();
+
+	glTranslated(BOUNDARY, 0.0, 0.0);
+	/* 図形の回転 #1#
+	glRotated(double(r * 10), 0.0, 1.0, 0.0);
+	/* 図形の色 (赤) #1#
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+
+	/* 図形の描画 #1#
+	glutSolidCone(100.0, 100.0, 50, 50);
+	/* モデルビュー変換行列の復帰 #1#
+	glPopMatrix();
+	/* モデルビュー変換行列の保存 #1#
+	glPushMatrix();
+
+	glTranslated(0.0, BOUNDARY, 0.0);
+	/* 図形の回転 #1#
+	glRotated(double(r * 10), 0.0, 1.0, 0.0);
+	/* 図形の色 (赤) #1#
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+
+	/* 図形の描画 #1#
+	glutSolidCone(100.0, 100.0, 50, 50);
+	/* モデルビュー変換行列の復帰 #1#
+	glPopMatrix();
+	/* モデルビュー変換行列の保存 #1#
+	glPushMatrix();
+
+	glTranslated(0.0, -BOUNDARY, 0.0);
+	/* 図形の回転 #1#
+	glRotated(double(r * 10), 0.0, 1.0, 0.0);
+	/* 図形の色 (赤) #1#
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+
+	/* 図形の描画 #1#
+	glutSolidCone(100.0, 100.0, 50, 50);
+	/* モデルビュー変換行列の復帰 #1#
+	glPopMatrix();
+	/* モデルビュー変換行列の保存 #1#
+	glPushMatrix();
+
+	glTranslated(0.0, 0.0, -BOUNDARY);
+	/* 図形の回転 #1#
+	glRotated(double(r * 10), 0.0, 1.0, 0.0);
+	/* 図形の色 (赤) #1#
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+
+	/* 図形の描画 #1#
+	glutSolidCone(100.0, 100.0, 50, 50);
+	/* モデルビュー変換行列の復帰 #1#
+	glPopMatrix();
+
+	glutSwapBuffers();
+
+	/* 一周回ったら回転角を 0 に戻す #1#
+	if (++r >= 36) r = 0;
+}
+*/
 
 
 void display(void)
