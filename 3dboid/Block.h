@@ -10,8 +10,17 @@ public:
 	bool disabled = false;
 	double x; //center x
 	double y; //center y
+	double z; //center z
 	double r; //radius
-	Block(double x, double y, double r);
+
+	/**
+	 * \brief 
+	 * \param x 
+	 * \param y 
+	 * \param z 
+	 * \param r 
+	 */
+	Block(double x, double y, double z, double r);
 
 	/**
 	* \brief
