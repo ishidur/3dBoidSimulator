@@ -176,9 +176,7 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 		//		}
 	}
 	/*loop ends here*/
-
-	Eigen::Vector3d wallRepel = Eigen::Vector3d::Zero();
-	for (auto n : grids[boid.grid_x][boid.grid_y][boid.grid_z].blockIndexes)
+	for (int n : grids[boid.grid_x][boid.grid_y][boid.grid_z].blockIndexes)
 	{
 		double dist = calcDist(boid.x, boid.y, boid.z, blocks[n].x, blocks[n].y, blocks[n].z);
 		if (dist - BLOCK_SIZE - BOID_SIZE <= R_4 && !blocks[n].disabled)
@@ -216,6 +214,7 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 	}
 
 	/*wall repel*/
+	Eigen::Vector3d wallRepel = Eigen::Vector3d::Zero();
 	double wall = BOUNDARY - WALL_SIZE;
 	double bound = wall - BOID_SIZE - R_4;
 	if (boid.x >= bound)
@@ -233,6 +232,14 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 	else if (boid.y <= -bound)
 	{
 		wallRepel.y() = -1.0 / (wall + boid.y);
+	};
+	if (boid.z >= bound)
+	{
+		wallRepel.z() = 1.0 / (wall - boid.z);
+	}
+	else if (boid.z <= -bound)
+	{
+		wallRepel.z() = -1.0 / (wall + boid.z);
 	};
 	Eigen::Vector3d V = ALPHA_1 * q1.normalized() + ALPHA_2 * q2 - ALPHA_3 * q3 - ALPHA_4 * q4 + ALPHA_5 * boid.vctr.normalized() - REPEL_WALL_WEIGHT * wallRepel;
 	Direction dir = Direction(V);
@@ -274,6 +281,7 @@ void drawWall()
 	glEnd();
 }
 */
+
 
 //this function needs grids
 void createGrids()
@@ -403,6 +411,7 @@ int findDuplicateBlock(double x, double y, double z)
 	}
 	return -1;
 }
+
 /*
 void display()
 {
@@ -507,7 +516,7 @@ void display(void)
 			block.drawBlock();
 		}
 	}
-//	glutSwapBuffers();
+	//	glutSwapBuffers();
 	glFlush();
 }
 
@@ -540,7 +549,7 @@ void resize(int w, int h)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	//	gluLookAt(3.0, 4.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-	gluLookAt(0.0, 0.0, w / WINDOW_SIZE * BOUNDARY * 2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	gluLookAt(0.0, 0.0, w / WINDOW_SIZE * BOUNDARY * 2.0+1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 }
 
 /*
@@ -614,7 +623,7 @@ void timer(int value)
 	//	{
 	//		cout << time / 10 << endl;
 	//	}
-	for (int i = 0; i < BOIDS_NO; i++)
+	for (int i = 0; i < boids.size(); i++)
 	{
 		boids[i].updatePosition();
 		if (i != 0)
@@ -624,7 +633,7 @@ void timer(int value)
 		findGrid(i, boids[i].x, boids[i].y, boids[i].z);
 	}
 	updateGrids();
-	for (int i = 0; i < BOIDS_NO; i++)
+	for (int i = 0; i < boids.size(); i++)
 	{
 		//boid速度ベクトルの計算部分
 		boids[i] = updateSpeedAndAngle(boids[i]);
@@ -655,7 +664,7 @@ int main(int argc, char* argv[])
 {
 	glutInit(&argc, argv);
 	glutInitWindowSize(WINDOW_SIZE, WINDOW_SIZE);
-//	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
+	//	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH);
 
 	glutCreateWindow(argv[0]);
