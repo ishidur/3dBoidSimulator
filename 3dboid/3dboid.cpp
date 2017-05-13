@@ -22,14 +22,14 @@ double mouseX = 0.0;
 double mouseY = 0.0;
 
 GLdouble vertex[][3] = {
-	{0.0, 0.0, 0.0},
-	{1.0, 0.0, 0.0},
-	{1.0, 1.0, 0.0},
-	{0.0, 1.0, 0.0},
-	{0.0, 0.0, 1.0},
-	{1.0, 0.0, 1.0},
-	{1.0, 1.0, 1.0},
-	{0.0, 1.0, 1.0}
+	{-BOUNDARY + WALL_SIZE, -BOUNDARY + WALL_SIZE, -BOUNDARY + WALL_SIZE},
+	{-BOUNDARY, -BOUNDARY + WALL_SIZE, -BOUNDARY + WALL_SIZE},
+	{-BOUNDARY, -BOUNDARY, -BOUNDARY + WALL_SIZE},
+	{-BOUNDARY + WALL_SIZE, -BOUNDARY, -BOUNDARY + WALL_SIZE},
+	{-BOUNDARY + WALL_SIZE, -BOUNDARY + WALL_SIZE, -BOUNDARY},
+	{-BOUNDARY, -BOUNDARY + WALL_SIZE, -BOUNDARY},
+	{-BOUNDARY, -BOUNDARY, -BOUNDARY},
+	{-BOUNDARY + WALL_SIZE, -BOUNDARY, -BOUNDARY}
 };
 
 int edge[][2] = {
@@ -107,9 +107,9 @@ std::vector<int> getAroundGridBoids(int id, int grid_x, int grid_y, int grid_z)
 	//			}
 	//		}
 	//	}
-	//	auto result = remove(indexes.begin(), indexes.end(), id);
-	//	auto result2 = unique(indexes.begin(), result);
-	//	indexes.erase(result2, indexes.end());
+	auto result = remove(indexes.begin(), indexes.end(), id);
+	auto result2 = unique(indexes.begin(), result);
+	indexes.erase(result2, indexes.end());
 	return indexes;
 }
 
@@ -123,7 +123,6 @@ double degreeToRadian(double deg)
 
 //this needs for Biod::isVisible
 double _viewAngle = degreeToRadian(THETA_1) / 2.0;
-
 BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 {
 	Eigen::Vector3d q1 = Eigen::Vector3d::Zero();
@@ -139,9 +138,15 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 	for (auto i : indexes)
 	{
 		double dist = calcDist(boid.x, boid.y, boid.z, boids[i].x, boids[i].y, boids[i].z);
+
 		//currently not working
 		//		if (boid.isVisible(boids[i].x, boids[i].y, _viewAngle))
 		//		{
+
+		if (dist == 0.0)
+		{
+			std::cout << "boo;" << boid.x << ", " << boid.y << ", " << boid.z << ", " << boids[i].x << ", " << boids[i].y << ", " << boids[i].z << ", " << std::endl;
+		}
 		/*boidが見える範囲内にいる*/
 		if (dist - 2.0 * BOID_SIZE < R_1)
 		{
@@ -173,6 +178,7 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 				boids[i].setColor(0.2, 0.2, 1.0);
 			}
 		}
+
 		//		}
 	}
 	/*loop ends here*/
@@ -240,47 +246,35 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 	else if (boid.z <= -bound)
 	{
 		wallRepel.z() = -1.0 / (wall + boid.z);
-	};
+	}
 	Eigen::Vector3d V = ALPHA_1 * q1.normalized() + ALPHA_2 * q2 - ALPHA_3 * q3 - ALPHA_4 * q4 + ALPHA_5 * boid.vctr.normalized() - REPEL_WALL_WEIGHT * wallRepel;
 	Direction dir = Direction(V);
 	boid.angleY = dir.angleY;
 	boid.angleZ = dir.angleZ;
 	boid.speed = BETA * log(V.norm() + 1.0);
 	boid.vctr = boid.speed * dir.vector;
+
+	if (boid.id == 0)
+	{
+		//		std::cout << "speed; " << boid.speed << "angleY; " << boid.angleY << "angleZ; " << boid.angleZ << std::endl;
+		//		std::cout << "pos; " << boid.x << "; " << boid.y << "; " << boid.z << std::endl;
+	}
 	return boid;
 }
 
-/*
 void drawWall()
 {
-	glColor3d(0.5, 0.5, 0.5);
-	double boundary = BOUNDARY;
-	glBegin(GL_POLYGON);
-	glVertex2d(boundary, boundary);
-	glVertex2d(boundary - WALL_SIZE, boundary);
-	glVertex2d(boundary - WALL_SIZE, -boundary);
-	glVertex2d(boundary, -boundary);
-	glEnd();
-	glBegin(GL_POLYGON);
-	glVertex2d(boundary, boundary);
-	glVertex2d(boundary, boundary - WALL_SIZE);
-	glVertex2d(-boundary, boundary - WALL_SIZE);
-	glVertex2d(-boundary, boundary);
-	glEnd();
-	glBegin(GL_POLYGON);
-	glVertex2d(-boundary, -boundary);
-	glVertex2d(-boundary, -boundary + WALL_SIZE);
-	glVertex2d(boundary, -boundary + WALL_SIZE);
-	glVertex2d(boundary, -boundary);
-	glEnd();
-	glBegin(GL_POLYGON);
-	glVertex2d(-boundary, -boundary);
-	glVertex2d(-boundary + WALL_SIZE, -boundary);
-	glVertex2d(-boundary + WALL_SIZE, boundary);
-	glVertex2d(-boundary, boundary);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+	glBegin(GL_QUADS);
+	for (int j = 0; j < 6; ++j)
+	{
+		for (int i = 0; i < 4; ++i)
+		{
+			glVertex3dv(vertex[face[j][i]]);
+		}
+	}
 	glEnd();
 }
-*/
 
 
 //this function needs grids
@@ -505,6 +499,83 @@ void display(void)
 	glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
 	glLightfv(GL_LIGHT1, GL_POSITION, light1pos);
 	//	drawWall();
+	glPushMatrix();
+	glTranslated(BOUNDARY, BOUNDARY, BOUNDARY);
+	/* 図形の色 (赤) */
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+
+	/* 図形の描画 */
+	glutSolidCone(50.0, 50.0, 20, 20);
+	/* モデルビュー変換行列の復帰 */
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslated(-BOUNDARY, BOUNDARY, BOUNDARY);
+	/* 図形の色 (赤) */
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+
+	/* 図形の描画 */
+	glutSolidCone(50.0, 50.0, 20, 20);
+	/* モデルビュー変換行列の復帰 */
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslated(BOUNDARY, -BOUNDARY, BOUNDARY);
+	/* 図形の色 (赤) */
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+
+	/* 図形の描画 */
+	glutSolidCone(50.0, 50.0, 20, 20);
+	/* モデルビュー変換行列の復帰 */
+	glPopMatrix();
+	glPushMatrix();
+	glTranslated(-BOUNDARY, -BOUNDARY, BOUNDARY);
+	/* 図形の色 (赤) */
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+
+	/* 図形の描画 */
+	glutSolidCone(50.0, 50.0, 20, 20);
+	/* モデルビュー変換行列の復帰 */
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslated(BOUNDARY, BOUNDARY, -BOUNDARY);
+	/* 図形の色 (赤) */
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+
+	/* 図形の描画 */
+	glutSolidCone(50.0, 50.0, 20, 20);
+	/* モデルビュー変換行列の復帰 */
+	glPopMatrix();
+	glPushMatrix();
+	glTranslated(-BOUNDARY, BOUNDARY, -BOUNDARY);
+	/* 図形の色 (赤) */
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+
+	/* 図形の描画 */
+	glutSolidCone(50.0, 50.0, 20, 20);
+	/* モデルビュー変換行列の復帰 */
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslated(BOUNDARY, -BOUNDARY, -BOUNDARY);
+	/* 図形の色 (赤) */
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+
+	/* 図形の描画 */
+	glutSolidCone(50.0, 50.0, 20, 20);
+	/* モデルビュー変換行列の復帰 */
+	glPopMatrix();
+	glPushMatrix();
+	glTranslated(-BOUNDARY, -BOUNDARY, -BOUNDARY);
+	/* 図形の色 (赤) */
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+
+	/* 図形の描画 */
+	glutSolidCone(50.0, 50.0, 20, 20);
+	/* モデルビュー変換行列の復帰 */
+	glPopMatrix();
+	drawWall();
 	for (auto boid : boids)
 	{
 		boid.drawBaseBoid();
@@ -542,14 +613,15 @@ void resize(int w, int h)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	//	gluPerspective(30.0, (double)w / (double)h, 1.0, 100.0);
-	gluPerspective(60.0, double(w) / double(h), 1.0, w / WINDOW_SIZE * BOUNDARY * 4.0);
+	gluPerspective(120.0, double(w) / double(h), 1.0, double(w) / WINDOW_SIZE * BOUNDARY * 4.0);
 	//	glOrtho(-w / WINDOW_SIZE * BOUNDARY, w / WINDOW_SIZE * BOUNDARY, -h / WINDOW_SIZE * BOUNDARY, h / WINDOW_SIZE * BOUNDARY, -1.0, 1.0);
 
 	/* モデルビュー変換行列の設定 */
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	//	gluLookAt(3.0, 4.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-	gluLookAt(0.0, 0.0, w / WINDOW_SIZE * BOUNDARY * 2.0+1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	gluLookAt(0.0, 0.0, w / WINDOW_SIZE * BOUNDARY * 2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	//	gluLookAt(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 }
 
 /*
