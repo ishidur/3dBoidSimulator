@@ -4,6 +4,7 @@
 #include <corecrt_math_defines.h>
 #include "Direction.h"
 #include "parameters.h" //import common parameters
+#include <iostream>
 
 //‹«ŠEðŒ: •Ç
 double checkBoundary(double pos)
@@ -47,11 +48,12 @@ void BaseBoid::drawBaseBoid() //TODO:’¹‚ç‚µ‚­
 {
 	GLfloat color[] = {GLfloat(r),GLfloat(g),GLfloat(b),1.0};
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
+	glColor3d(r, g, b);
 	glPushMatrix();
 	glTranslated(x, y, z);
 	glRotated(radianToDegree(angleY), 0.0, -1.0, 0.0);
 	glRotated(radianToDegree(angleZ), 0.0, 0.0, 1.0);
-	glutSolidCone(-0.4 * BOID_SIZE * sqrt(3.0) / 2.0, BOID_SIZE, 10, 10);
+	glutWireCone(-0.4 * BOID_SIZE * sqrt(3.0) / 2.0, BOID_SIZE, 10, 10);
 	glPopMatrix();
 }
 
