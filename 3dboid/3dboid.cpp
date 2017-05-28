@@ -2,6 +2,7 @@
 //
 
 //BUG: somewhat boid disappear
+//BUG: angleY calc is going nan. maybe...
 #include "stdafx.h"
 #include <GL/glut.h>
 #include <stdlib.h>
@@ -101,30 +102,30 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 			/*rule1*/
 			n1++;
 			q1 += boids[i].vctr.normalized();
-			if (boid.id == 0)
-			{
-				boids[i].setColor(0.6, 0.6, 1.0);
-			}
+			//			if (boid.id == 0)
+			//			{
+			//				boids[i].setColor(0.6, 0.6, 1.0);
+			//			}
 		}
 		if (dist - 2.0 * BOID_SIZE < R_2)
 		{
 			/*rule2*/
 			n2++;
 			q2 += Eigen::Vector3d(boids[i].x - boid.x, boids[i].y - boid.y, boids[i].z - boid.z) / dist / dist * R_2;
-			if (boid.id == 0)
-			{
-				boids[i].setColor(0.4, 0.4, 1.0);
-			}
+			//			if (boid.id == 0)
+			//			{
+			//				boids[i].setColor(0.4, 0.4, 1.0);
+			//			}
 		}
 		if (dist - 2.0 * BOID_SIZE < R_3)
 		{
 			/*rule3*/
 			n3++;
 			q3 += Eigen::Vector3d(boids[i].x - boid.x, boids[i].y - boid.y, boids[i].z - boid.z) / dist / dist * R_3;
-			if (boid.id == 0)
-			{
-				boids[i].setColor(0.2, 0.2, 1.0);
-			}
+			//			if (boid.id == 0)
+			//			{
+			//				boids[i].setColor(0.2, 0.2, 1.0);
+			//			}
 		}
 
 		//		}
@@ -268,6 +269,7 @@ void findGrid(int index, double x, double y, double z)
 	boids[index].grid_y = gridy;
 	boids[index].grid_z = gridz;
 }
+
 //BUG: whaaaat
 void whereBlock(int index, double x, double y, double z)
 {
@@ -423,42 +425,42 @@ void display()
 }
 */
 
-void wall()
+void drawWall()
 {
 	glBegin(GL_POLYGON);
 	glColor3d(1.0, 0.0, 0.0);
-	glVertex3d(BOUNDARY*1.1, BOUNDARY*1.1, BOUNDARY*1.1);
-	glVertex3d(BOUNDARY*1.1, -BOUNDARY*1.1, BOUNDARY*1.1);
-	glVertex3d(BOUNDARY*1.1, -BOUNDARY*1.1, -BOUNDARY*1.1);
-	glVertex3d(BOUNDARY*1.1, BOUNDARY*1.1, -BOUNDARY*1.1);
+	glVertex3d(BOUNDARY * 1.1, BOUNDARY * 1.1, BOUNDARY * 1.1);
+	glVertex3d(BOUNDARY * 1.1, -BOUNDARY * 1.1, BOUNDARY * 1.1);
+	glVertex3d(BOUNDARY * 1.1, -BOUNDARY * 1.1, -BOUNDARY * 1.1);
+	glVertex3d(BOUNDARY * 1.1, BOUNDARY * 1.1, -BOUNDARY * 1.1);
 	glEnd();
 	glBegin(GL_POLYGON);
 	glColor3d(0.0, 1.0, 0.0);
-	glVertex3d(-BOUNDARY*1.1, BOUNDARY*1.1, BOUNDARY*1.1);
-	glVertex3d(-BOUNDARY*1.1, -BOUNDARY*1.1, BOUNDARY*1.1);
-	glVertex3d(-BOUNDARY*1.1, -BOUNDARY*1.1, -BOUNDARY*1.1);
-	glVertex3d(-BOUNDARY*1.1, BOUNDARY*1.1, -BOUNDARY*1.1);
+	glVertex3d(-BOUNDARY * 1.1, BOUNDARY * 1.1, BOUNDARY * 1.1);
+	glVertex3d(-BOUNDARY * 1.1, -BOUNDARY * 1.1, BOUNDARY * 1.1);
+	glVertex3d(-BOUNDARY * 1.1, -BOUNDARY * 1.1, -BOUNDARY * 1.1);
+	glVertex3d(-BOUNDARY * 1.1, BOUNDARY * 1.1, -BOUNDARY * 1.1);
 	glEnd();
 	glBegin(GL_POLYGON);
 	glColor3d(0.0, 0.0, 1.0);
-	glVertex3d(BOUNDARY*1.1, BOUNDARY*1.1, BOUNDARY*1.1);
-	glVertex3d(-BOUNDARY*1.1, BOUNDARY*1.1, BOUNDARY*1.1);
-	glVertex3d(-BOUNDARY*1.1, BOUNDARY*1.1, -BOUNDARY*1.1);
-	glVertex3d(BOUNDARY*1.1, BOUNDARY*1.1, -BOUNDARY*1.1);
+	glVertex3d(BOUNDARY * 1.1, BOUNDARY * 1.1, BOUNDARY * 1.1);
+	glVertex3d(-BOUNDARY * 1.1, BOUNDARY * 1.1, BOUNDARY * 1.1);
+	glVertex3d(-BOUNDARY * 1.1, BOUNDARY * 1.1, -BOUNDARY * 1.1);
+	glVertex3d(BOUNDARY * 1.1, BOUNDARY * 1.1, -BOUNDARY * 1.1);
 	glEnd();
 	glBegin(GL_POLYGON);
 	glColor3d(1.0, 1.0, 0.0);
-	glVertex3d(BOUNDARY*1.1, -BOUNDARY*1.1, BOUNDARY*1.1);
-	glVertex3d(-BOUNDARY*1.1, -BOUNDARY*1.1, BOUNDARY*1.1);
-	glVertex3d(-BOUNDARY*1.1, -BOUNDARY*1.1, -BOUNDARY*1.1);
-	glVertex3d(BOUNDARY*1.1, -BOUNDARY*1.1, -BOUNDARY*1.1);
+	glVertex3d(BOUNDARY * 1.1, -BOUNDARY * 1.1, BOUNDARY * 1.1);
+	glVertex3d(-BOUNDARY * 1.1, -BOUNDARY * 1.1, BOUNDARY * 1.1);
+	glVertex3d(-BOUNDARY * 1.1, -BOUNDARY * 1.1, -BOUNDARY * 1.1);
+	glVertex3d(BOUNDARY * 1.1, -BOUNDARY * 1.1, -BOUNDARY * 1.1);
 	glEnd();
 	glBegin(GL_POLYGON);
 	glColor3d(1.0, 0.0, 1.0);
-	glVertex3d(BOUNDARY*1.1, BOUNDARY*1.1, -BOUNDARY*1.1);
-	glVertex3d(-BOUNDARY*1.1, BOUNDARY*1.1, -BOUNDARY*1.1);
-	glVertex3d(-BOUNDARY*1.1, -BOUNDARY*1.1, -BOUNDARY*1.1);
-	glVertex3d(BOUNDARY*1.1, -BOUNDARY*1.1, -BOUNDARY*1.1);
+	glVertex3d(BOUNDARY * 1.1, BOUNDARY * 1.1, -BOUNDARY * 1.1);
+	glVertex3d(-BOUNDARY * 1.1, BOUNDARY * 1.1, -BOUNDARY * 1.1);
+	glVertex3d(-BOUNDARY * 1.1, -BOUNDARY * 1.1, -BOUNDARY * 1.1);
+	glVertex3d(BOUNDARY * 1.1, -BOUNDARY * 1.1, -BOUNDARY * 1.1);
 	glEnd();
 }
 
@@ -472,9 +474,7 @@ void display(void)
 	//	glLightfv(GL_LIGHT1, GL_POSITION, light1pos);
 	//	drawWall();
 
-	wall();
-
-	//	drawWall();
+	drawWall();
 	for (auto boid : boids)
 	{
 		boid.drawBaseBoid();
@@ -596,11 +596,11 @@ void timer(int value)
 	//	}
 	for (int i = 0; i < boids.size(); i++)
 	{
-		boids[i].setColor(double(i) / double(boids.size()), double(i) / double(boids.size()), double(i) / double(boids.size()));
+		//		boids[i].setColor(double(i) / double(boids.size()), double(i) / double(boids.size()), double(i) / double(boids.size()));
 		boids[i].updatePosition();
 		if (time % 10 == 0)
 		{
-			std::cout << boids[i].id << ": " << boids[i].x << ", " << boids[i].y << ", " << boids[i].z << std::endl;
+			//			std::cout << boids[i].id << ": " << boids[i].x << ", " << boids[i].y << ", " << boids[i].z << ", " << boids[i].angleY << ", " << boids[i].angleZ << std::endl;
 		}
 		//		if (i != 0)
 		//		{
@@ -622,7 +622,7 @@ void timer(int value)
 
 void init()
 {
-	glClearColor(1.0, 1.0, 1.0, 0.5);
+	glClearColor(0.0, 0.0, 0.0, 0.5);
 
 	//	glEnable(GL_DEPTH_TEST);
 	//
