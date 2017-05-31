@@ -23,8 +23,8 @@ bool isPress = false;
 double mouseX = 0.0;
 double mouseY = 0.0;
 
-GLfloat light0pos[] = {0.0, 3.0, 5.0, 1.0};
-GLfloat light1pos[] = {5.0, 3.0, 0.0, 1.0};
+GLfloat light0pos[] = {-(BOUNDARY - WALL_SIZE), -(BOUNDARY - WALL_SIZE), -(BOUNDARY - WALL_SIZE), 1.0};
+GLfloat light1pos[] = {(BOUNDARY - WALL_SIZE), (BOUNDARY - WALL_SIZE), (BOUNDARY - WALL_SIZE), 1.0};
 
 GLfloat green[] = {0.0, 1.0, 0.0, 1.0};
 GLfloat red[] = {0.8, 0.2, 0.2, 1.0};
@@ -427,52 +427,52 @@ void display()
 
 void drawWall()
 {
+	double bound = BOUNDARY;
 	glBegin(GL_POLYGON);
 	glColor3d(1.0, 0.0, 0.0);
-	glVertex3d(BOUNDARY * 1.1, BOUNDARY * 1.1, BOUNDARY * 1.1);
-	glVertex3d(BOUNDARY * 1.1, -BOUNDARY * 1.1, BOUNDARY * 1.1);
-	glVertex3d(BOUNDARY * 1.1, -BOUNDARY * 1.1, -BOUNDARY * 1.1);
-	glVertex3d(BOUNDARY * 1.1, BOUNDARY * 1.1, -BOUNDARY * 1.1);
+	glVertex3d(bound, bound, bound);
+	glVertex3d(bound, -bound, bound);
+	glVertex3d(bound, -bound, -bound);
+	glVertex3d(bound, bound, -bound);
 	glEnd();
 	glBegin(GL_POLYGON);
 	glColor3d(0.0, 1.0, 0.0);
-	glVertex3d(-BOUNDARY * 1.1, BOUNDARY * 1.1, BOUNDARY * 1.1);
-	glVertex3d(-BOUNDARY * 1.1, -BOUNDARY * 1.1, BOUNDARY * 1.1);
-	glVertex3d(-BOUNDARY * 1.1, -BOUNDARY * 1.1, -BOUNDARY * 1.1);
-	glVertex3d(-BOUNDARY * 1.1, BOUNDARY * 1.1, -BOUNDARY * 1.1);
+	glVertex3d(-bound, bound, bound);
+	glVertex3d(-bound, -bound, bound);
+	glVertex3d(-bound, -bound, -bound);
+	glVertex3d(-bound, bound, -bound);
 	glEnd();
 	glBegin(GL_POLYGON);
 	glColor3d(0.0, 0.0, 1.0);
-	glVertex3d(BOUNDARY * 1.1, BOUNDARY * 1.1, BOUNDARY * 1.1);
-	glVertex3d(-BOUNDARY * 1.1, BOUNDARY * 1.1, BOUNDARY * 1.1);
-	glVertex3d(-BOUNDARY * 1.1, BOUNDARY * 1.1, -BOUNDARY * 1.1);
-	glVertex3d(BOUNDARY * 1.1, BOUNDARY * 1.1, -BOUNDARY * 1.1);
+	glVertex3d(bound, bound, bound);
+	glVertex3d(-bound, bound, bound);
+	glVertex3d(-bound, bound, -bound);
+	glVertex3d(bound, bound, -bound);
 	glEnd();
 	glBegin(GL_POLYGON);
 	glColor3d(1.0, 1.0, 0.0);
-	glVertex3d(BOUNDARY * 1.1, -BOUNDARY * 1.1, BOUNDARY * 1.1);
-	glVertex3d(-BOUNDARY * 1.1, -BOUNDARY * 1.1, BOUNDARY * 1.1);
-	glVertex3d(-BOUNDARY * 1.1, -BOUNDARY * 1.1, -BOUNDARY * 1.1);
-	glVertex3d(BOUNDARY * 1.1, -BOUNDARY * 1.1, -BOUNDARY * 1.1);
+	glVertex3d(bound, -bound, bound);
+	glVertex3d(-bound, -bound, bound);
+	glVertex3d(-bound, -bound, -bound);
+	glVertex3d(bound, -bound, -bound);
 	glEnd();
 	glBegin(GL_POLYGON);
 	glColor3d(1.0, 0.0, 1.0);
-	glVertex3d(BOUNDARY * 1.1, BOUNDARY * 1.1, -BOUNDARY * 1.1);
-	glVertex3d(-BOUNDARY * 1.1, BOUNDARY * 1.1, -BOUNDARY * 1.1);
-	glVertex3d(-BOUNDARY * 1.1, -BOUNDARY * 1.1, -BOUNDARY * 1.1);
-	glVertex3d(BOUNDARY * 1.1, -BOUNDARY * 1.1, -BOUNDARY * 1.1);
+	glVertex3d(bound, bound, -bound);
+	glVertex3d(-bound, bound, -bound);
+	glVertex3d(-bound, -bound, -bound);
+	glVertex3d(bound, -bound, -bound);
 	glEnd();
 }
 
 void display(void)
 {
-	//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//	glClear(GL_COLOR_BUFFER_BIT);
 
 	//	/* åıåπÇÃà íuê›íË */
-	//	glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
-	//	glLightfv(GL_LIGHT1, GL_POSITION, light1pos);
-	//	drawWall();
+	glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
+	glLightfv(GL_LIGHT1, GL_POSITION, light1pos);
 
 	drawWall();
 	for (auto boid : boids)
@@ -624,24 +624,26 @@ void init()
 {
 	glClearColor(0.0, 0.0, 0.0, 0.5);
 
-	//	glEnable(GL_DEPTH_TEST);
-	//
-	//	glEnable(GL_CULL_FACE);
-	//	glCullFace(GL_FRONT);
-	//
-	//	glEnable(GL_LIGHTING);
-	//	glEnable(GL_LIGHT0);
-	//	glEnable(GL_LIGHT1);
-	//	glLightfv(GL_LIGHT1, GL_DIFFUSE, green);
-	//	glLightfv(GL_LIGHT1, GL_SPECULAR, green);
+	glEnable(GL_DEPTH_TEST);
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, red);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, red);
+	glEnable(GL_LIGHT1);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, green);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, green);
 }
 
 int main(int argc, char* argv[])
 {
 	glutInit(&argc, argv);
 	glutInitWindowSize(WINDOW_SIZE, WINDOW_SIZE);
-	glutInitDisplayMode(GLUT_RGBA);
-	//	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH);
+	//	glutInitDisplayMode(GLUT_RGBA);
+	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH);
 
 	glutCreateWindow(argv[0]);
 	//	glutMouseFunc(mouse);
@@ -658,30 +660,12 @@ int main(int argc, char* argv[])
 			//			boids[i].setColor(1.0, 0.0, 0.0);
 		}
 	}
-	//	for (int i = 0; i < BLOCK_NO; ++i)
-	//	{
-	//		blocks.push_back(Block((double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE) * 2.0 / RAND_MAX, (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE) * 2.0 / RAND_MAX, (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE) * 2.0 / RAND_MAX, BLOCK_SIZE));
-	//		whereBlock(i, blocks[i].x, blocks[i].y, blocks[i].z);
-	//	}
+	for (int i = 0; i < BLOCK_NO; ++i)
+	{
+		blocks.push_back(Block((double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE) * 2.0 / RAND_MAX, (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE) * 2.0 / RAND_MAX, (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE) * 2.0 / RAND_MAX, BLOCK_SIZE));
+		whereBlock(i, blocks[i].x, blocks[i].y, blocks[i].z);
+	}
 
-	blocks.push_back(Block(BOUNDARY, BOUNDARY, -BOUNDARY, BLOCK_SIZE));
-	whereBlock(0, blocks[0].x, blocks[0].y, blocks[0].z);
-	blocks.push_back(Block(BOUNDARY, -BOUNDARY, -BOUNDARY, BLOCK_SIZE));
-	whereBlock(1, blocks[1].x, blocks[1].y, blocks[1].z);
-	blocks.push_back(Block(-BOUNDARY, BOUNDARY, -BOUNDARY, BLOCK_SIZE));
-	whereBlock(2, blocks[2].x, blocks[2].y, blocks[2].z);
-	blocks.push_back(Block(-BOUNDARY, -BOUNDARY, -BOUNDARY, BLOCK_SIZE));
-	whereBlock(3, blocks[3].x, blocks[3].y, blocks[3].z);
-	blocks.push_back(Block(BOUNDARY, BOUNDARY, BOUNDARY, BLOCK_SIZE));
-	whereBlock(4, blocks[4].x, blocks[4].y, blocks[4].z);
-	blocks.push_back(Block(BOUNDARY, -BOUNDARY, BOUNDARY, BLOCK_SIZE));
-	whereBlock(5, blocks[5].x, blocks[5].y, blocks[5].z);
-	blocks.push_back(Block(-BOUNDARY, BOUNDARY, BOUNDARY, BLOCK_SIZE));
-	whereBlock(6, blocks[6].x, blocks[6].y, blocks[6].z);
-	blocks.push_back(Block(-BOUNDARY, -BOUNDARY, BOUNDARY, BLOCK_SIZE));
-	whereBlock(7, blocks[7].x, blocks[7].y, blocks[7].z);
-	blocks.push_back(Block(0.0, 0.0, -BOUNDARY, BLOCK_SIZE));
-	whereBlock(6, blocks[8].x, blocks[8].y, blocks[8].z);
 	updateGrids();
 	glutDisplayFunc(display);
 	glutReshapeFunc(resize);
