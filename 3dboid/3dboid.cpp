@@ -1,6 +1,8 @@
 // 3dboid.cpp : コンソール アプリケーションのエントリ ポイントを定義します。
 //
 
+//BUG: somewhat boid disappear
+//BUG: angleY calc is going nan. maybe...
 #include "stdafx.h"
 #include <GL/glut.h>
 #include <stdlib.h>
@@ -21,62 +23,8 @@ bool isPress = false;
 double mouseX = 0.0;
 double mouseY = 0.0;
 
-GLdouble vertex[][3] = {
-	{0.0, 0.0, 0.0},
-	{1.0, 0.0, 0.0},
-	{1.0, 1.0, 0.0},
-	{0.0, 1.0, 0.0},
-	{0.0, 0.0, 1.0},
-	{1.0, 0.0, 1.0},
-	{1.0, 1.0, 1.0},
-	{0.0, 1.0, 1.0}
-};
-
-int edge[][2] = {
-	{0, 1},
-	{1, 2},
-	{2, 3},
-	{3, 0},
-	{4, 5},
-	{5, 6},
-	{6, 7},
-	{7, 4},
-	{0, 4},
-	{1, 5},
-	{2, 6},
-	{3, 7}
-};
-
-int face[][4] = {
-	{0, 1, 2, 3},
-	{1, 5, 6, 2},
-	{5, 4, 7, 6},
-	{4, 0, 3, 7},
-	{4, 5, 1, 0},
-	{3, 2, 6, 7}
-};
-
-GLdouble normal[][3] = {
-	{0.0, 0.0,-1.0},
-	{1.0, 0.0, 0.0},
-	{0.0, 0.0, 1.0},
-	{-1.0, 0.0, 0.0},
-	{0.0,-1.0, 0.0},
-	{0.0, 1.0, 0.0}
-};
-
-
-GLdouble color[][3] = {
-	{1.0, 0.0, 0.0},
-	{0.0, 1.0, 0.0},
-	{0.0, 0.0, 1.0},
-	{1.0, 1.0, 0.0},
-	{1.0, 0.0, 1.0},
-	{0.0, 1.0, 1.0}
-};
-
-GLfloat light0pos[] = {0.0, 3.0, 5.0, 1.0};
-GLfloat light1pos[] = {5.0, 3.0, 0.0, 1.0};
+GLfloat light0pos[] = {-(BOUNDARY - WALL_SIZE), -(BOUNDARY - WALL_SIZE), -(BOUNDARY - WALL_SIZE), 1.0};
+GLfloat light1pos[] = {(BOUNDARY - WALL_SIZE), (BOUNDARY - WALL_SIZE), (BOUNDARY - WALL_SIZE), 1.0};
 
 GLfloat green[] = {0.0, 1.0, 0.0, 1.0};
 GLfloat red[] = {0.8, 0.2, 0.2, 1.0};
@@ -107,9 +55,9 @@ std::vector<int> getAroundGridBoids(int id, int grid_x, int grid_y, int grid_z)
 	//			}
 	//		}
 	//	}
-	//	auto result = remove(indexes.begin(), indexes.end(), id);
-	//	auto result2 = unique(indexes.begin(), result);
-	//	indexes.erase(result2, indexes.end());
+	auto result = remove(indexes.begin(), indexes.end(), id);
+	auto result2 = unique(indexes.begin(), result);
+	indexes.erase(result2, indexes.end());
 	return indexes;
 }
 
@@ -139,46 +87,51 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 	for (auto i : indexes)
 	{
 		double dist = calcDist(boid.x, boid.y, boid.z, boids[i].x, boids[i].y, boids[i].z);
+
 		//currently not working
 		//		if (boid.isVisible(boids[i].x, boids[i].y, _viewAngle))
 		//		{
+
+		if (dist == 0.0)
+		{
+			std::cout << "boo;" << boid.x << ", " << boid.y << ", " << boid.z << ", " << boids[i].x << ", " << boids[i].y << ", " << boids[i].z << ", " << std::endl;
+		}
 		/*boidが見える範囲内にいる*/
 		if (dist - 2.0 * BOID_SIZE < R_1)
 		{
 			/*rule1*/
 			n1++;
 			q1 += boids[i].vctr.normalized();
-			if (boid.id == 0)
-			{
-				boids[i].setColor(0.6, 0.6, 1.0);
-			}
+			//			if (boid.id == 0)
+			//			{
+			//				boids[i].setColor(0.6, 0.6, 1.0);
+			//			}
 		}
 		if (dist - 2.0 * BOID_SIZE < R_2)
 		{
 			/*rule2*/
 			n2++;
 			q2 += Eigen::Vector3d(boids[i].x - boid.x, boids[i].y - boid.y, boids[i].z - boid.z) / dist / dist * R_2;
-			if (boid.id == 0)
-			{
-				boids[i].setColor(0.4, 0.4, 1.0);
-			}
+			//			if (boid.id == 0)
+			//			{
+			//				boids[i].setColor(0.4, 0.4, 1.0);
+			//			}
 		}
 		if (dist - 2.0 * BOID_SIZE < R_3)
 		{
 			/*rule3*/
 			n3++;
 			q3 += Eigen::Vector3d(boids[i].x - boid.x, boids[i].y - boid.y, boids[i].z - boid.z) / dist / dist * R_3;
-			if (boid.id == 0)
-			{
-				boids[i].setColor(0.2, 0.2, 1.0);
-			}
+			//			if (boid.id == 0)
+			//			{
+			//				boids[i].setColor(0.2, 0.2, 1.0);
+			//			}
 		}
+
 		//		}
 	}
 	/*loop ends here*/
-
-	Eigen::Vector3d wallRepel = Eigen::Vector3d::Zero();
-	for (auto n : grids[boid.grid_x][boid.grid_y][boid.grid_z].blockIndexes)
+	for (int n : grids[boid.grid_x][boid.grid_y][boid.grid_z].blockIndexes)
 	{
 		double dist = calcDist(boid.x, boid.y, boid.z, blocks[n].x, blocks[n].y, blocks[n].z);
 		if (dist - BLOCK_SIZE - BOID_SIZE <= R_4 && !blocks[n].disabled)
@@ -216,6 +169,7 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 	}
 
 	/*wall repel*/
+	Eigen::Vector3d wallRepel = Eigen::Vector3d::Zero();
 	double wall = BOUNDARY - WALL_SIZE;
 	double bound = wall - BOID_SIZE - R_4;
 	if (boid.x >= bound)
@@ -234,46 +188,28 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 	{
 		wallRepel.y() = -1.0 / (wall + boid.y);
 	};
+	if (boid.z >= bound)
+	{
+		wallRepel.z() = 1.0 / (wall - boid.z);
+	}
+	else if (boid.z <= -bound)
+	{
+		wallRepel.z() = -1.0 / (wall + boid.z);
+	}
 	Eigen::Vector3d V = ALPHA_1 * q1.normalized() + ALPHA_2 * q2 - ALPHA_3 * q3 - ALPHA_4 * q4 + ALPHA_5 * boid.vctr.normalized() - REPEL_WALL_WEIGHT * wallRepel;
 	Direction dir = Direction(V);
 	boid.angleY = dir.angleY;
 	boid.angleZ = dir.angleZ;
 	boid.speed = BETA * log(V.norm() + 1.0);
 	boid.vctr = boid.speed * dir.vector;
+
+	if (boid.id == 0)
+	{
+		//		std::cout << "speed; " << boid.speed << "angleY; " << boid.angleY << "angleZ; " << boid.angleZ << std::endl;
+		//		std::cout << "pos; " << boid.x << "; " << boid.y << "; " << boid.z << std::endl;
+	}
 	return boid;
 }
-
-/*
-void drawWall()
-{
-	glColor3d(0.5, 0.5, 0.5);
-	double boundary = BOUNDARY;
-	glBegin(GL_POLYGON);
-	glVertex2d(boundary, boundary);
-	glVertex2d(boundary - WALL_SIZE, boundary);
-	glVertex2d(boundary - WALL_SIZE, -boundary);
-	glVertex2d(boundary, -boundary);
-	glEnd();
-	glBegin(GL_POLYGON);
-	glVertex2d(boundary, boundary);
-	glVertex2d(boundary, boundary - WALL_SIZE);
-	glVertex2d(-boundary, boundary - WALL_SIZE);
-	glVertex2d(-boundary, boundary);
-	glEnd();
-	glBegin(GL_POLYGON);
-	glVertex2d(-boundary, -boundary);
-	glVertex2d(-boundary, -boundary + WALL_SIZE);
-	glVertex2d(boundary, -boundary + WALL_SIZE);
-	glVertex2d(boundary, -boundary);
-	glEnd();
-	glBegin(GL_POLYGON);
-	glVertex2d(-boundary, -boundary);
-	glVertex2d(-boundary + WALL_SIZE, -boundary);
-	glVertex2d(-boundary + WALL_SIZE, boundary);
-	glVertex2d(-boundary, boundary);
-	glEnd();
-}
-*/
 
 //this function needs grids
 void createGrids()
@@ -325,21 +261,22 @@ void updateGrids()
 void findGrid(int index, double x, double y, double z)
 {
 	double width = 2.0 * BOUNDARY / GRID_NO;
-	int gridx = int(ceil((BOUNDARY + x) / width));
-	int gridy = int(ceil((BOUNDARY + y) / width));
-	int gridz = int(ceil((BOUNDARY + z) / width));
+	int gridx = int(ceil((BOUNDARY + x) / width)) + 1;
+	int gridy = int(ceil((BOUNDARY + y) / width)) + 1;
+	int gridz = int(ceil((BOUNDARY + z) / width)) + 1;
 	grids[gridy][gridx][gridz].addBoidByIndex(index);
 	boids[index].grid_x = gridx;
 	boids[index].grid_y = gridy;
 	boids[index].grid_z = gridz;
 }
 
+//BUG: whaaaat
 void whereBlock(int index, double x, double y, double z)
 {
 	double width = 2.0 * BOUNDARY / GRID_NO;
-	int gridx = int(ceil((BOUNDARY + x) / width));
-	int gridy = int(ceil((BOUNDARY + y) / width));
-	int gridz = int(ceil((BOUNDARY + z) / width));
+	int gridx = int(ceil((BOUNDARY + x) / width)) + 1;
+	int gridy = int(ceil((BOUNDARY + y) / width)) + 1;
+	int gridz = int(ceil((BOUNDARY + z) / width)) + 1;
 	for (int i = -1; i <= 1; ++i)
 	{
 		for (int j = -1; j <= 1; ++j)
@@ -355,9 +292,9 @@ void whereBlock(int index, double x, double y, double z)
 void removeBlock(int index, double x, double y, double z)
 {
 	double width = 2.0 * BOUNDARY / GRID_NO;
-	int gridx = int(ceil((BOUNDARY + x) / width));
-	int gridy = int(ceil((BOUNDARY + y) / width));
-	int gridz = int(ceil((BOUNDARY + z) / width));
+	int gridx = int(ceil((BOUNDARY + x) / width)) + 1;
+	int gridy = int(ceil((BOUNDARY + y) / width)) + 1;
+	int gridz = int(ceil((BOUNDARY + z) / width)) + 1;
 
 	for (int i = -1; i <= 1; ++i)
 	{
@@ -403,6 +340,7 @@ int findDuplicateBlock(double x, double y, double z)
 	}
 	return -1;
 }
+
 /*
 void display()
 {
@@ -487,15 +425,56 @@ void display()
 }
 */
 
+void drawWall()
+{
+	double bound = BOUNDARY;
+	glBegin(GL_POLYGON);
+	glColor3d(1.0, 0.0, 0.0);
+	glVertex3d(bound, bound, bound);
+	glVertex3d(bound, -bound, bound);
+	glVertex3d(bound, -bound, -bound);
+	glVertex3d(bound, bound, -bound);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glColor3d(0.0, 1.0, 0.0);
+	glVertex3d(-bound, bound, bound);
+	glVertex3d(-bound, -bound, bound);
+	glVertex3d(-bound, -bound, -bound);
+	glVertex3d(-bound, bound, -bound);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glColor3d(0.0, 0.0, 1.0);
+	glVertex3d(bound, bound, bound);
+	glVertex3d(-bound, bound, bound);
+	glVertex3d(-bound, bound, -bound);
+	glVertex3d(bound, bound, -bound);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glColor3d(1.0, 1.0, 0.0);
+	glVertex3d(bound, -bound, bound);
+	glVertex3d(-bound, -bound, bound);
+	glVertex3d(-bound, -bound, -bound);
+	glVertex3d(bound, -bound, -bound);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glColor3d(1.0, 0.0, 1.0);
+	glVertex3d(bound, bound, -bound);
+	glVertex3d(-bound, bound, -bound);
+	glVertex3d(-bound, -bound, -bound);
+	glVertex3d(bound, -bound, -bound);
+	glEnd();
+}
 
 void display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//	glClear(GL_COLOR_BUFFER_BIT);
 
-	/* 光源の位置設定 */
+	//	/* 光源の位置設定 */
 	glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
 	glLightfv(GL_LIGHT1, GL_POSITION, light1pos);
-	//	drawWall();
+
+	drawWall();
 	for (auto boid : boids)
 	{
 		boid.drawBaseBoid();
@@ -507,7 +486,7 @@ void display(void)
 			block.drawBlock();
 		}
 	}
-//	glutSwapBuffers();
+	//	glutSwapBuffers();
 	glFlush();
 }
 
@@ -533,14 +512,15 @@ void resize(int w, int h)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	//	gluPerspective(30.0, (double)w / (double)h, 1.0, 100.0);
-	gluPerspective(60.0, double(w) / double(h), 1.0, w / WINDOW_SIZE * BOUNDARY * 4.0);
+	gluPerspective(120.0, double(w) / double(h), 0.0001, double(w) / WINDOW_SIZE * BOUNDARY * 3.0);
 	//	glOrtho(-w / WINDOW_SIZE * BOUNDARY, w / WINDOW_SIZE * BOUNDARY, -h / WINDOW_SIZE * BOUNDARY, h / WINDOW_SIZE * BOUNDARY, -1.0, 1.0);
 
 	/* モデルビュー変換行列の設定 */
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	//	gluLookAt(3.0, 4.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-	gluLookAt(0.0, 0.0, w / WINDOW_SIZE * BOUNDARY * 2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	gluLookAt(0.0, 0.0, double(w) / WINDOW_SIZE * BOUNDARY * 1.5, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	//	gluLookAt(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 }
 
 /*
@@ -614,17 +594,22 @@ void timer(int value)
 	//	{
 	//		cout << time / 10 << endl;
 	//	}
-	for (int i = 0; i < BOIDS_NO; i++)
+	for (int i = 0; i < boids.size(); i++)
 	{
+		//		boids[i].setColor(double(i) / double(boids.size()), double(i) / double(boids.size()), double(i) / double(boids.size()));
 		boids[i].updatePosition();
-		if (i != 0)
+		if (time % 10 == 0)
 		{
-			boids[i].setColor(1.0, 1.0, 1.0);
+			//			std::cout << boids[i].id << ": " << boids[i].x << ", " << boids[i].y << ", " << boids[i].z << ", " << boids[i].angleY << ", " << boids[i].angleZ << std::endl;
 		}
+		//		if (i != 0)
+		//		{
+		//			boids[i].setColor(1.0, 1.0, 1.0);
+		//		}
 		findGrid(i, boids[i].x, boids[i].y, boids[i].z);
 	}
 	updateGrids();
-	for (int i = 0; i < BOIDS_NO; i++)
+	for (int i = 0; i < boids.size(); i++)
 	{
 		//boid速度ベクトルの計算部分
 		boids[i] = updateSpeedAndAngle(boids[i]);
@@ -637,7 +622,7 @@ void timer(int value)
 
 void init()
 {
-	glClearColor(0.0, 0.0, 1.0, 0.5);
+	glClearColor(0.0, 0.0, 0.0, 0.5);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -646,6 +631,8 @@ void init()
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, red);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, red);
 	glEnable(GL_LIGHT1);
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, green);
 	glLightfv(GL_LIGHT1, GL_SPECULAR, green);
@@ -655,7 +642,7 @@ int main(int argc, char* argv[])
 {
 	glutInit(&argc, argv);
 	glutInitWindowSize(WINDOW_SIZE, WINDOW_SIZE);
-//	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
+	//	glutInitDisplayMode(GLUT_RGBA);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH);
 
 	glutCreateWindow(argv[0]);
@@ -670,14 +657,15 @@ int main(int argc, char* argv[])
 		findGrid(i, boids[i].x, boids[i].y, boids[i].z);
 		if (i == 0)
 		{
-			boids[i].setColor(1.0, 0.0, 0.0);
+			//			boids[i].setColor(1.0, 0.0, 0.0);
 		}
 	}
 	for (int i = 0; i < BLOCK_NO; ++i)
 	{
-		blocks.push_back(Block((double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE - BOID_SIZE) * 2.0 / RAND_MAX, (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE - BOID_SIZE) * 2.0 / RAND_MAX, (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE - BOID_SIZE) * 2.0 / RAND_MAX, BLOCK_SIZE));
+		blocks.push_back(Block((double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE) * 2.0 / RAND_MAX, (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE) * 2.0 / RAND_MAX, (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE) * 2.0 / RAND_MAX, BLOCK_SIZE));
 		whereBlock(i, blocks[i].x, blocks[i].y, blocks[i].z);
 	}
+
 	updateGrids();
 	glutDisplayFunc(display);
 	glutReshapeFunc(resize);
