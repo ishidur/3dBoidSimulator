@@ -45,27 +45,27 @@ std::vector<int> getAroundGridBoids(int id, int grid_x, int grid_y, int grid_z)
 {
 	//something went wrong
 	std::vector<int> indexes = grids[grid_x][grid_y][grid_z].boidIndexes;
-	//	std::cout << "indexes" << std::endl;
-	//	for (auto a: indexes)
-	//	{
-	//		std::cout << a << std::endl;
-	//	}
-	//	for (int i = -1; i <= 1; ++i)
-	//	{
-	//		for (int j = -1; j <= 1; ++j)
-	//		{
-	//			for (int k = -1; k <= 1; ++k)
-	//			{
-	//				std::cout << "grid:" << grid_x + i << ", " << grid_y + j << ", " << grid_z + k << std::endl;
-	//
-	//				for (auto b : grids[grid_x + i][grid_y + j][grid_z + k].boidIndexes)
-	//				{
-	//					std::cout << b << std::endl;
-	//				}
-	//				indexes.insert(indexes.end(), grids[grid_x + i][grid_y + j][grid_z + k].boidIndexes.begin(), grids[grid_x + i][grid_y + k][grid_z + j].boidIndexes.end());
-	//			}
-	//		}
-	//	}
+	std::cout << "indexes" << std::endl;
+	for (auto a: indexes)
+	{
+		std::cout << a << std::endl;
+	}
+	for (int i = -1; i <= 1; ++i)
+	{
+		for (int j = -1; j <= 1; ++j)
+		{
+			for (int k = -1; k <= 1; ++k)
+			{
+				std::cout << "grid:" << grid_x + i << ", " << grid_y + j << ", " << grid_z + k << std::endl;
+
+				for (auto b : grids[grid_x + i][grid_y + j][grid_z + k].boidIndexes)
+				{
+					std::cout << b << std::endl;
+				}
+				indexes.insert(indexes.end(), grids[grid_x + i][grid_y + j][grid_z + k].boidIndexes.begin(), grids[grid_x + i][grid_y + k][grid_z + j].boidIndexes.end());
+			}
+		}
+	}
 	auto result = remove(indexes.begin(), indexes.end(), id);
 	auto result2 = unique(indexes.begin(), result);
 	indexes.erase(result2, indexes.end());
