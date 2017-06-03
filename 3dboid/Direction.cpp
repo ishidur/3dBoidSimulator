@@ -44,17 +44,9 @@ Direction::Direction(Eigen::Vector3d& v)
 	if (z >= 0.0)
 	{
 		angleY = acos(x / distXZ);
-		if (isnan(angleY))
-		{
-			std::cout << "boo! " << x / distXZ << ", " << x << ", " << distXZ << ", " << acos(x / distXZ) << std::endl;
-		}
 	}
 	else
 	{
 		angleY = -acos(x / distXZ);
-		if (isnan(angleY))
-		{
-			std::cout << "boo! " << x / distXZ << ", " << x << ", " << distXZ << ", " << acos(x / distXZ) << std::endl;
-		}
 	}
 }
