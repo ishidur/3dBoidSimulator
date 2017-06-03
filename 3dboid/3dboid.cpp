@@ -1,5 +1,5 @@
 // 3dboid.cpp : コンソール アプリケーションのエントリ ポイントを定義します。
-//
+// Created by Ryota Ishidu, Morishita Lab.
 
 //BUG: somewhat boid disappear
 //BUG: angleY calc is going nan. maybe...
@@ -43,18 +43,17 @@ std::vector<Block> blocks;
 //this function needs grids
 std::vector<int> getAroundGridBoids(int id, int grid_x, int grid_y, int grid_z)
 {
-	//something went wrong
 	std::vector<int> indexes = grids[grid_x][grid_y][grid_z].boidIndexes;
-	//	for (int i = -1; i <= 1; ++i)
-	//	{
-	//		for (int j = -1; j <= 1; ++j)
-	//		{
-	//			for (int k = -1; k <= 1; ++k)
-	//			{
-	//				indexes.insert(indexes.end(), grids[grid_x + i][grid_y + j][grid_z + k].boidIndexes.begin(), grids[grid_x + i][grid_y + k][grid_z + j].boidIndexes.end());
-	//			}
-	//		}
-	//	}
+	for (int i = -1; i <= 1; ++i)
+	{
+		for (int j = -1; j <= 1; ++j)
+		{
+			for (int k = -1; k <= 1; ++k)
+			{
+				indexes.insert(indexes.end(), grids[grid_x + i][grid_y + j][grid_z + k].boidIndexes.begin(), grids[grid_x + i][grid_y + j][grid_z + k].boidIndexes.end());
+			}
+		}
+	}
 	auto result = remove(indexes.begin(), indexes.end(), id);
 	auto result2 = unique(indexes.begin(), result);
 	indexes.erase(result2, indexes.end());
@@ -86,16 +85,13 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 	/*loop starts here*/
 	for (auto i : indexes)
 	{
+//		std::cout << "boid " << boid.id << " can see boid " << boids[i].id << std::endl;
 		double dist = calcDist(boid.x, boid.y, boid.z, boids[i].x, boids[i].y, boids[i].z);
 
 		//currently not working
 		//		if (boid.isVisible(boids[i].x, boids[i].y, _viewAngle))
 		//		{
 
-		if (dist == 0.0)
-		{
-			std::cout << "boo;" << boid.x << ", " << boid.y << ", " << boid.z << ", " << boids[i].x << ", " << boids[i].y << ", " << boids[i].z << ", " << std::endl;
-		}
 		/*boidが見える範囲内にいる*/
 		if (dist - 2.0 * BOID_SIZE < R_1)
 		{
@@ -261,9 +257,9 @@ void updateGrids()
 void findGrid(int index, double x, double y, double z)
 {
 	double width = 2.0 * BOUNDARY / GRID_NO;
-	int gridx = int(ceil((BOUNDARY + x) / width)) + 1;
-	int gridy = int(ceil((BOUNDARY + y) / width)) + 1;
-	int gridz = int(ceil((BOUNDARY + z) / width)) + 1;
+	int gridx = int(ceil((BOUNDARY + x) / width));
+	int gridy = int(ceil((BOUNDARY + y) / width));
+	int gridz = int(ceil((BOUNDARY + z) / width));
 	grids[gridy][gridx][gridz].addBoidByIndex(index);
 	boids[index].grid_x = gridx;
 	boids[index].grid_y = gridy;
@@ -274,9 +270,9 @@ void findGrid(int index, double x, double y, double z)
 void whereBlock(int index, double x, double y, double z)
 {
 	double width = 2.0 * BOUNDARY / GRID_NO;
-	int gridx = int(ceil((BOUNDARY + x) / width)) + 1;
-	int gridy = int(ceil((BOUNDARY + y) / width)) + 1;
-	int gridz = int(ceil((BOUNDARY + z) / width)) + 1;
+	int gridx = int(ceil((BOUNDARY + x) / width));
+	int gridy = int(ceil((BOUNDARY + y) / width));
+	int gridz = int(ceil((BOUNDARY + z) / width));
 	for (int i = -1; i <= 1; ++i)
 	{
 		for (int j = -1; j <= 1; ++j)
@@ -292,9 +288,9 @@ void whereBlock(int index, double x, double y, double z)
 void removeBlock(int index, double x, double y, double z)
 {
 	double width = 2.0 * BOUNDARY / GRID_NO;
-	int gridx = int(ceil((BOUNDARY + x) / width)) + 1;
-	int gridy = int(ceil((BOUNDARY + y) / width)) + 1;
-	int gridz = int(ceil((BOUNDARY + z) / width)) + 1;
+	int gridx = int(ceil((BOUNDARY + x) / width));
+	int gridy = int(ceil((BOUNDARY + y) / width));
+	int gridz = int(ceil((BOUNDARY + z) / width));
 
 	for (int i = -1; i <= 1; ++i)
 	{
@@ -340,90 +336,6 @@ int findDuplicateBlock(double x, double y, double z)
 	}
 	return -1;
 }
-
-/*
-void display()
-{
-	static int r = 0; /* 回転角 #1#
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	/* 光源の位置設定 #1#
-	glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
-	glLightfv(GL_LIGHT1, GL_POSITION, light1pos);
-
-	/* モデルビュー変換行列の保存 #1#
-	glPushMatrix();
-
-	glTranslated(-BOUNDARY, 0.0, 0.0);
-	/* 図形の回転 #1#
-	glRotated(double(r * 10), 0.0, 1.0, 0.0);
-	/* 図形の色 (赤) #1#
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
-
-	/* 図形の描画 #1#
-	glutSolidCone(100.0, 100.0, 50, 50);
-	/* モデルビュー変換行列の復帰 #1#
-	glPopMatrix();
-	/* モデルビュー変換行列の保存 #1#
-	glPushMatrix();
-
-	glTranslated(BOUNDARY, 0.0, 0.0);
-	/* 図形の回転 #1#
-	glRotated(double(r * 10), 0.0, 1.0, 0.0);
-	/* 図形の色 (赤) #1#
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
-
-	/* 図形の描画 #1#
-	glutSolidCone(100.0, 100.0, 50, 50);
-	/* モデルビュー変換行列の復帰 #1#
-	glPopMatrix();
-	/* モデルビュー変換行列の保存 #1#
-	glPushMatrix();
-
-	glTranslated(0.0, BOUNDARY, 0.0);
-	/* 図形の回転 #1#
-	glRotated(double(r * 10), 0.0, 1.0, 0.0);
-	/* 図形の色 (赤) #1#
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
-
-	/* 図形の描画 #1#
-	glutSolidCone(100.0, 100.0, 50, 50);
-	/* モデルビュー変換行列の復帰 #1#
-	glPopMatrix();
-	/* モデルビュー変換行列の保存 #1#
-	glPushMatrix();
-
-	glTranslated(0.0, -BOUNDARY, 0.0);
-	/* 図形の回転 #1#
-	glRotated(double(r * 10), 0.0, 1.0, 0.0);
-	/* 図形の色 (赤) #1#
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
-
-	/* 図形の描画 #1#
-	glutSolidCone(100.0, 100.0, 50, 50);
-	/* モデルビュー変換行列の復帰 #1#
-	glPopMatrix();
-	/* モデルビュー変換行列の保存 #1#
-	glPushMatrix();
-
-	glTranslated(0.0, 0.0, -BOUNDARY);
-	/* 図形の回転 #1#
-	glRotated(double(r * 10), 0.0, 1.0, 0.0);
-	/* 図形の色 (赤) #1#
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
-
-	/* 図形の描画 #1#
-	glutSolidCone(100.0, 100.0, 50, 50);
-	/* モデルビュー変換行列の復帰 #1#
-	glPopMatrix();
-
-	glutSwapBuffers();
-
-	/* 一周回ったら回転角を 0 に戻す #1#
-	if (++r >= 36) r = 0;
-}
-*/
 
 void drawWall()
 {
@@ -486,26 +398,11 @@ void display(void)
 			block.drawBlock();
 		}
 	}
-	//	glutSwapBuffers();
 	glFlush();
 }
 
 void resize(int w, int h)
 {
-	//	glViewport(0, 0, w, h);
-	//
-	//	/* 透視変換行列の設定 */
-	//	glMatrixMode(GL_PROJECTION);
-	//	glLoadIdentity();
-	//	gluPerspective(30.0, double(w) / double(h), -w / WINDOW_SIZE * BOUNDARY, w / WINDOW_SIZE * BOUNDARY);
-	//	gluPerspective(30.0, double(w) / double(h), 1.0, 100.0);
-	//	glOrtho(-w / WINDOW_SIZE * BOUNDARY, w / WINDOW_SIZE * BOUNDARY, -h / WINDOW_SIZE * BOUNDARY, h / WINDOW_SIZE * BOUNDARY, -h / WINDOW_SIZE * BOUNDARY, h / WINDOW_SIZE * BOUNDARY);
-	//
-	//	/* モデルビュー変換行列の設定 */
-	//	glMatrixMode(GL_MODELVIEW);
-	//	glLoadIdentity();
-	//	gluLookAt(1.0, 1.0, -w / WINDOW_SIZE * BOUNDARY, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-
 	glViewport(0, 0, w, h);
 
 	/* 透視変換行列の設定 */
@@ -518,9 +415,7 @@ void resize(int w, int h)
 	/* モデルビュー変換行列の設定 */
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	//	gluLookAt(3.0, 4.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 	gluLookAt(0.0, 0.0, double(w) / WINDOW_SIZE * BOUNDARY * 1.5, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-	//	gluLookAt(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 }
 
 /*
