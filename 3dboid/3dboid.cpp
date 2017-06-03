@@ -1,5 +1,5 @@
 // 3dboid.cpp : コンソール アプリケーションのエントリ ポイントを定義します。
-//
+// Created by Ryota Ishidu, Morishita Lab.
 
 //BUG: somewhat boid disappear
 //BUG: angleY calc is going nan. maybe...
@@ -45,12 +45,23 @@ std::vector<int> getAroundGridBoids(int id, int grid_x, int grid_y, int grid_z)
 {
 	//something went wrong
 	std::vector<int> indexes = grids[grid_x][grid_y][grid_z].boidIndexes;
+	//	std::cout << "indexes" << std::endl;
+	//	for (auto a: indexes)
+	//	{
+	//		std::cout << a << std::endl;
+	//	}
 	//	for (int i = -1; i <= 1; ++i)
 	//	{
 	//		for (int j = -1; j <= 1; ++j)
 	//		{
 	//			for (int k = -1; k <= 1; ++k)
 	//			{
+	//				std::cout << "grid:" << grid_x + i << ", " << grid_y + j << ", " << grid_z + k << std::endl;
+	//
+	//				for (auto b : grids[grid_x + i][grid_y + j][grid_z + k].boidIndexes)
+	//				{
+	//					std::cout << b << std::endl;
+	//				}
 	//				indexes.insert(indexes.end(), grids[grid_x + i][grid_y + j][grid_z + k].boidIndexes.begin(), grids[grid_x + i][grid_y + k][grid_z + j].boidIndexes.end());
 	//			}
 	//		}
@@ -341,90 +352,6 @@ int findDuplicateBlock(double x, double y, double z)
 	return -1;
 }
 
-/*
-void display()
-{
-	static int r = 0; /* 回転角 #1#
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	/* 光源の位置設定 #1#
-	glLightfv(GL_LIGHT0, GL_POSITION, light0pos);
-	glLightfv(GL_LIGHT1, GL_POSITION, light1pos);
-
-	/* モデルビュー変換行列の保存 #1#
-	glPushMatrix();
-
-	glTranslated(-BOUNDARY, 0.0, 0.0);
-	/* 図形の回転 #1#
-	glRotated(double(r * 10), 0.0, 1.0, 0.0);
-	/* 図形の色 (赤) #1#
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
-
-	/* 図形の描画 #1#
-	glutSolidCone(100.0, 100.0, 50, 50);
-	/* モデルビュー変換行列の復帰 #1#
-	glPopMatrix();
-	/* モデルビュー変換行列の保存 #1#
-	glPushMatrix();
-
-	glTranslated(BOUNDARY, 0.0, 0.0);
-	/* 図形の回転 #1#
-	glRotated(double(r * 10), 0.0, 1.0, 0.0);
-	/* 図形の色 (赤) #1#
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
-
-	/* 図形の描画 #1#
-	glutSolidCone(100.0, 100.0, 50, 50);
-	/* モデルビュー変換行列の復帰 #1#
-	glPopMatrix();
-	/* モデルビュー変換行列の保存 #1#
-	glPushMatrix();
-
-	glTranslated(0.0, BOUNDARY, 0.0);
-	/* 図形の回転 #1#
-	glRotated(double(r * 10), 0.0, 1.0, 0.0);
-	/* 図形の色 (赤) #1#
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
-
-	/* 図形の描画 #1#
-	glutSolidCone(100.0, 100.0, 50, 50);
-	/* モデルビュー変換行列の復帰 #1#
-	glPopMatrix();
-	/* モデルビュー変換行列の保存 #1#
-	glPushMatrix();
-
-	glTranslated(0.0, -BOUNDARY, 0.0);
-	/* 図形の回転 #1#
-	glRotated(double(r * 10), 0.0, 1.0, 0.0);
-	/* 図形の色 (赤) #1#
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
-
-	/* 図形の描画 #1#
-	glutSolidCone(100.0, 100.0, 50, 50);
-	/* モデルビュー変換行列の復帰 #1#
-	glPopMatrix();
-	/* モデルビュー変換行列の保存 #1#
-	glPushMatrix();
-
-	glTranslated(0.0, 0.0, -BOUNDARY);
-	/* 図形の回転 #1#
-	glRotated(double(r * 10), 0.0, 1.0, 0.0);
-	/* 図形の色 (赤) #1#
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
-
-	/* 図形の描画 #1#
-	glutSolidCone(100.0, 100.0, 50, 50);
-	/* モデルビュー変換行列の復帰 #1#
-	glPopMatrix();
-
-	glutSwapBuffers();
-
-	/* 一周回ったら回転角を 0 に戻す #1#
-	if (++r >= 36) r = 0;
-}
-*/
-
 void drawWall()
 {
 	double bound = BOUNDARY;
@@ -486,7 +413,6 @@ void display(void)
 			block.drawBlock();
 		}
 	}
-	//	glutSwapBuffers();
 	glFlush();
 }
 
