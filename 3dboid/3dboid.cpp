@@ -85,6 +85,7 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 	/*loop starts here*/
 	for (auto i : indexes)
 	{
+//		std::cout << "boid " << boid.id << " can see boid " << boids[i].id << std::endl;
 		double dist = calcDist(boid.x, boid.y, boid.z, boids[i].x, boids[i].y, boids[i].z);
 
 		//currently not working
