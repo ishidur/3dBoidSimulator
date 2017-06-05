@@ -229,7 +229,7 @@ void updateGrids()
 	{
 		for (int j = 1; j <= GRID_NO; j++)
 		{
-			for (int k = 1; k < GRID_NO; ++k)
+			for (int k = 1; k <= GRID_NO; ++k)
 			{
 				std::vector<int> indexes = grids[i][j][k].boidIndexes;
 				for (auto n : indexes)
