@@ -88,11 +88,6 @@ bool BaseBoid::isVisible(double _x, double _y, double _z, double _viewAngle)
 	Eigen::Vector3d dist = Eigen::Vector3d(dx, dy, dz);
 	double innertial = inner(vctr.normalized(), dist.normalized());
 	double angle = acos(innertial);
-	if (id == 0)
-	{
-		std::cout << "innertial: " << innertial << std::endl;
-		std::cout << "angle: " << angle << std::endl;
-	}
 	if (angle > _viewAngle)
 	{
 		return false;
