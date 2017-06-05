@@ -1,4 +1,4 @@
-// 3dboid.cpp : コンソール アプリケーションのエントリ ポイントを定義します。
+// main.cpp : コンソール アプリケーションのエントリ ポイントを定義します。
 // Created by Ryota Ishidu, Morishita Lab.
 
 //BUG: somewhat boid disappear

@@ -147,7 +147,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="3dboid.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="BaseBoid.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Direction.cpp" />
