@@ -19,12 +19,13 @@ void Block::setColor(double _red, double _green, double _blue)
 
 void Block::drawBlock()
 {
+	int slice = 10;
 	GLfloat color[] = {GLfloat(red),GLfloat(green),GLfloat(blue),1.0};
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 	glColor3d(red, green, blue);
 	glPushMatrix();
 	glTranslated(x, y, z);
-	glutSolidSphere(r, 10, 10);
+	glutSolidSphere(r, slice, slice);
 	glPopMatrix();
 }
 
