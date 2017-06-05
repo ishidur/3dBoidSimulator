@@ -1,8 +1,6 @@
-// 3dboid.cpp : コンソール アプリケーションのエントリ ポイントを定義します。
+// main.cpp : コンソール アプリケーションのエントリ ポイントを定義します。
 // Created by Ryota Ishidu, Morishita Lab.
 
-//BUG: somewhat boid disappear
-//BUG: angleY calc is going nan. maybe...
 #include "stdafx.h"
 #include <GL/glut.h>
 #include <stdlib.h>
@@ -23,12 +21,13 @@ bool isPress = false;
 double mouseX = 0.0;
 double mouseY = 0.0;
 
-GLfloat light0pos[] = {-(BOUNDARY - WALL_SIZE), -(BOUNDARY - WALL_SIZE), -(BOUNDARY - WALL_SIZE), 1.0};
-GLfloat light1pos[] = {(BOUNDARY - WALL_SIZE), (BOUNDARY - WALL_SIZE), (BOUNDARY - WALL_SIZE), 1.0};
+GLfloat light0pos[] = {0.0, 0.0, BOUNDARY, 1.0};
+GLfloat light1pos[] = {0.0, 0.0, BOUNDARY, 1.0};
 
 GLfloat green[] = {0.0, 1.0, 0.0, 1.0};
 GLfloat red[] = {0.8, 0.2, 0.2, 1.0};
-GLfloat blue[] = {0.2, 0.2, 0.8, 1.0};
+GLfloat blue[] = {0.0, 0.0, 1.0, 0.6};
+GLfloat white[] = {0.5, 0.5, 0.5, 0.4};
 
 double calcDist(double x1, double y1, double z1, double x2, double y2, double z2)
 {
@@ -85,7 +84,7 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 	/*loop starts here*/
 	for (auto i : indexes)
 	{
-//		std::cout << "boid " << boid.id << " can see boid " << boids[i].id << std::endl;
+		//		std::cout << "boid " << boid.id << " can see boid " << boids[i].id << std::endl;
 		double dist = calcDist(boid.x, boid.y, boid.z, boids[i].x, boids[i].y, boids[i].z);
 
 		//currently not working
@@ -198,12 +197,6 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 	boid.angleZ = dir.angleZ;
 	boid.speed = BETA * log(V.norm() + 1.0);
 	boid.vctr = boid.speed * dir.vector;
-
-	if (boid.id == 0)
-	{
-		//		std::cout << "speed; " << boid.speed << "angleY; " << boid.angleY << "angleZ; " << boid.angleZ << std::endl;
-		//		std::cout << "pos; " << boid.x << "; " << boid.y << "; " << boid.z << std::endl;
-	}
 	return boid;
 }
 
@@ -340,6 +333,8 @@ int findDuplicateBlock(double x, double y, double z)
 void drawWall()
 {
 	double bound = BOUNDARY;
+	GLfloat color[] = { 1.0, 1.0, 1.0, 1.0 };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 	glBegin(GL_POLYGON);
 	glColor3d(1.0, 0.0, 0.0);
 	glVertex3d(bound, bound, bound);
@@ -350,16 +345,16 @@ void drawWall()
 	glBegin(GL_POLYGON);
 	glColor3d(0.0, 1.0, 0.0);
 	glVertex3d(-bound, bound, bound);
-	glVertex3d(-bound, -bound, bound);
-	glVertex3d(-bound, -bound, -bound);
 	glVertex3d(-bound, bound, -bound);
+	glVertex3d(-bound, -bound, -bound);
+	glVertex3d(-bound, -bound, bound);
 	glEnd();
 	glBegin(GL_POLYGON);
 	glColor3d(0.0, 0.0, 1.0);
 	glVertex3d(bound, bound, bound);
-	glVertex3d(-bound, bound, bound);
-	glVertex3d(-bound, bound, -bound);
 	glVertex3d(bound, bound, -bound);
+	glVertex3d(-bound, bound, -bound);
+	glVertex3d(-bound, bound, bound);
 	glEnd();
 	glBegin(GL_POLYGON);
 	glColor3d(1.0, 1.0, 0.0);
@@ -371,9 +366,9 @@ void drawWall()
 	glBegin(GL_POLYGON);
 	glColor3d(1.0, 0.0, 1.0);
 	glVertex3d(bound, bound, -bound);
-	glVertex3d(-bound, bound, -bound);
-	glVertex3d(-bound, -bound, -bound);
 	glVertex3d(bound, -bound, -bound);
+	glVertex3d(-bound, -bound, -bound);
+	glVertex3d(-bound, bound, -bound);
 	glEnd();
 }
 
@@ -526,11 +521,11 @@ void init()
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, red);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, red);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, blue);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, blue);
 	glEnable(GL_LIGHT1);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, green);
-	glLightfv(GL_LIGHT1, GL_SPECULAR, green);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, white);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, white);
 }
 
 int main(int argc, char* argv[])

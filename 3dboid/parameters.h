@@ -1,7 +1,7 @@
 #pragma once
 /*prameters*/
 #define GRID_NO 10 //number of grid; boid can see around 1 grid
-#define BOID_SIZE 10.0 //size of boid
+#define BOID_SIZE 8.0 //size of boid
 #define WALL_SIZE 5.0 //size of wall
 #define BLOCK_SIZE 10.0 //size of block
 #define BOID_SPEED 3.0 //initial boid speed
