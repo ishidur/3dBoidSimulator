@@ -4,6 +4,7 @@
 #include <corecrt_math_defines.h>
 #include "Direction.h"
 #include "parameters.h" //import common parameters
+#include <iostream>
 
 double checkBoundary(double pos)
 {
@@ -72,30 +73,29 @@ void BaseBoid::updatePosition()
 	z = checkBoundary(z);
 }
 
+double inner(Eigen::Vector3d a, Eigen::Vector3d b)
+{
+	return a.x() * b.x() + a.y() * b.y() + a.z() * b.z();
+}
+
 //currently not working
 bool BaseBoid::isVisible(double _x, double _y, double _z, double _viewAngle)
 {
-	//	double dx = _x - x;
-	//	double dy = _y - y;
-	//	Direction bDirection = Direction(dx, dy);
-	//	double maxAngle = angleY + _viewAngle;
-	//	double minAngle = angleY - _viewAngle;
-	//
-	//	bool max = maxAngle > M_PI ? bDirection.angle > maxAngle - 2.0 * M_PI : bDirection.angle > maxAngle;
-	//	bool min = minAngle < -M_PI ? bDirection.angle < minAngle + 2.0 * M_PI : bDirection.angle < minAngle;
-	//	if (maxAngle <= M_PI && minAngle > -M_PI)
-	//	{
-	//		if (max || min)
-	//		{
-	//			return false;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		if (max && min)
-	//		{
-	//			return false;
-	//		}
-	//	}
+	double dx = _x - x;
+	double dy = _y - y;
+	double dz = _z - z;
+	//	Direction bDirection = Direction(dx, dy, dz);
+	Eigen::Vector3d dist = Eigen::Vector3d(dx, dy, dz);
+	double innertial = inner(vctr.normalized(), dist.normalized());
+	double angle = acos(innertial);
+	if (id == 0)
+	{
+		std::cout << "innertial: " << innertial << std::endl;
+		std::cout << "angle: " << angle << std::endl;
+	}
+	if (angle > _viewAngle)
+	{
+		return false;
+	}
 	return true;
 }

@@ -88,42 +88,40 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 		double dist = calcDist(boid.x, boid.y, boid.z, boids[i].x, boids[i].y, boids[i].z);
 
 		//currently not working
-		//		if (boid.isVisible(boids[i].x, boids[i].y, _viewAngle))
-		//		{
-
-		/*boidが見える範囲内にいる*/
-		if (dist - 2.0 * BOID_SIZE < R_1)
+		if (boid.isVisible(boids[i].x, boids[i].y, boids[i].z, _viewAngle))
 		{
-			/*rule1*/
-			n1++;
-			q1 += boids[i].vctr.normalized();
-			//			if (boid.id == 0)
-			//			{
-			//				boids[i].setColor(0.6, 0.6, 1.0);
-			//			}
+			/*boidが見える範囲内にいる*/
+			if (dist - 2.0 * BOID_SIZE < R_1)
+			{
+				/*rule1*/
+				n1++;
+				q1 += boids[i].vctr.normalized();
+				if (boid.id == 0)
+				{
+					boids[i].setColor(1.0, 1.0, 0.0);
+				}
+			}
+			if (dist - 2.0 * BOID_SIZE < R_2)
+			{
+				/*rule2*/
+				n2++;
+				q2 += Eigen::Vector3d(boids[i].x - boid.x, boids[i].y - boid.y, boids[i].z - boid.z) / dist / dist * R_2;
+				if (boid.id == 0)
+				{
+					boids[i].setColor(1.0, 1.0, 0.0);
+				}
+			}
+			if (dist - 2.0 * BOID_SIZE < R_3)
+			{
+				/*rule3*/
+				n3++;
+				q3 += Eigen::Vector3d(boids[i].x - boid.x, boids[i].y - boid.y, boids[i].z - boid.z) / dist / dist * R_3;
+				if (boid.id == 0)
+				{
+					boids[i].setColor(0.0, 1.0, 0.0);
+				}
+			}
 		}
-		if (dist - 2.0 * BOID_SIZE < R_2)
-		{
-			/*rule2*/
-			n2++;
-			q2 += Eigen::Vector3d(boids[i].x - boid.x, boids[i].y - boid.y, boids[i].z - boid.z) / dist / dist * R_2;
-			//			if (boid.id == 0)
-			//			{
-			//				boids[i].setColor(0.4, 0.4, 1.0);
-			//			}
-		}
-		if (dist - 2.0 * BOID_SIZE < R_3)
-		{
-			/*rule3*/
-			n3++;
-			q3 += Eigen::Vector3d(boids[i].x - boid.x, boids[i].y - boid.y, boids[i].z - boid.z) / dist / dist * R_3;
-			//			if (boid.id == 0)
-			//			{
-			//				boids[i].setColor(0.2, 0.2, 1.0);
-			//			}
-		}
-
-		//		}
 	}
 	/*loop ends here*/
 	for (int n : grids[boid.grid_x][boid.grid_y][boid.grid_z].blockIndexes)
@@ -333,7 +331,7 @@ int findDuplicateBlock(double x, double y, double z)
 void drawWall()
 {
 	double bound = BOUNDARY;
-	GLfloat color[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat color[] = {1.0, 1.0, 1.0, 1.0};
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 	glBegin(GL_POLYGON);
 	glColor3d(1.0, 0.0, 0.0);
@@ -403,9 +401,7 @@ void resize(int w, int h)
 	/* 透視変換行列の設定 */
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	//	gluPerspective(30.0, (double)w / (double)h, 1.0, 100.0);
 	gluPerspective(120.0, double(w) / double(h), 0.0001, double(w) / WINDOW_SIZE * BOUNDARY * 3.0);
-	//	glOrtho(-w / WINDOW_SIZE * BOUNDARY, w / WINDOW_SIZE * BOUNDARY, -h / WINDOW_SIZE * BOUNDARY, h / WINDOW_SIZE * BOUNDARY, -1.0, 1.0);
 
 	/* モデルビュー変換行列の設定 */
 	glMatrixMode(GL_MODELVIEW);
@@ -486,16 +482,11 @@ void timer(int value)
 	//	}
 	for (int i = 0; i < boids.size(); i++)
 	{
-		//		boids[i].setColor(double(i) / double(boids.size()), double(i) / double(boids.size()), double(i) / double(boids.size()));
 		boids[i].updatePosition();
-		if (time % 10 == 0)
+		if (i != 0)
 		{
-			//			std::cout << boids[i].id << ": " << boids[i].x << ", " << boids[i].y << ", " << boids[i].z << ", " << boids[i].angleY << ", " << boids[i].angleZ << std::endl;
+			boids[i].setColor(1.0, 1.0, 1.0);
 		}
-		//		if (i != 0)
-		//		{
-		//			boids[i].setColor(1.0, 1.0, 1.0);
-		//		}
 		findGrid(i, boids[i].x, boids[i].y, boids[i].z);
 	}
 	updateGrids();
@@ -547,7 +538,7 @@ int main(int argc, char* argv[])
 		findGrid(i, boids[i].x, boids[i].y, boids[i].z);
 		if (i == 0)
 		{
-			//			boids[i].setColor(1.0, 0.0, 0.0);
+			boids[i].setColor(1.0, 0.0, 0.0);
 		}
 	}
 	for (int i = 0; i < BLOCK_NO; ++i)
