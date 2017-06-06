@@ -4,7 +4,6 @@
 #include <corecrt_math_defines.h>
 #include "Direction.h"
 #include "parameters.h" //import common parameters
-#include <iostream>
 
 double checkBoundary(double pos)
 {
@@ -78,13 +77,11 @@ double inner(Eigen::Vector3d a, Eigen::Vector3d b)
 	return a.x() * b.x() + a.y() * b.y() + a.z() * b.z();
 }
 
-//currently not working
 bool BaseBoid::isVisible(double _x, double _y, double _z, double _viewAngle)
 {
 	double dx = _x - x;
 	double dy = _y - y;
 	double dz = _z - z;
-	//	Direction bDirection = Direction(dx, dy, dz);
 	Eigen::Vector3d dist = Eigen::Vector3d(dx, dy, dz);
 	double innertial = inner(vctr.normalized(), dist.normalized());
 	double angle = acos(innertial);
