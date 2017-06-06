@@ -84,10 +84,7 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 	/*loop starts here*/
 	for (auto i : indexes)
 	{
-		//		std::cout << "boid " << boid.id << " can see boid " << boids[i].id << std::endl;
 		double dist = calcDist(boid.x, boid.y, boid.z, boids[i].x, boids[i].y, boids[i].z);
-
-		//currently not working
 		if (boid.isVisible(boids[i].x, boids[i].y, boids[i].z, _viewAngle))
 		{
 			/*boid‚ªŒ©‚¦‚é”ÍˆÍ“à‚É‚¢‚é*/
@@ -251,7 +248,7 @@ void findGrid(int index, double x, double y, double z)
 	int gridx = int(ceil((BOUNDARY + x) / width));
 	int gridy = int(ceil((BOUNDARY + y) / width));
 	int gridz = int(ceil((BOUNDARY + z) / width));
-	grids[gridy][gridx][gridz].addBoidByIndex(index);
+	grids[gridx][gridy][gridz].addBoidByIndex(index);
 	boids[index].grid_x = gridx;
 	boids[index].grid_y = gridy;
 	boids[index].grid_z = gridz;
