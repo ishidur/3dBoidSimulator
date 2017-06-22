@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <tchar.h>
 
+#include "parameters.h" //import common parameters
 
 
 // TODO: プログラムに必要な追加ヘッダーをここで参照してください
