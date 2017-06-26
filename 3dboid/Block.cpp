@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Block.h"
-#include <GL/glut.h>
 
 Block::Block(double _x, double _y, double _z, double _r)
 {

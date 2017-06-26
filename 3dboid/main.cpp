@@ -2,7 +2,6 @@
 // Created by Ryota Ishidu, Morishita Lab.
 
 #include "stdafx.h"
-#include <GL/glut.h>
 #include <stdlib.h>
 #define _USE_MATH_DEFINES
 #include <cmath>

@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <tchar.h>
+#include <GL/glut.h>
 
 #include "parameters.h" //import common parameters
 
