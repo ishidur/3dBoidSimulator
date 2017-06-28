@@ -11,6 +11,7 @@
 #include <tchar.h>
 #include <GL/glut.h>
 
+#include <GL/glut.h>
 #include "parameters.h" //import common parameters
 
 
