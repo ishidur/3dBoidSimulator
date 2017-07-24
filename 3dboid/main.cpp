@@ -91,30 +91,30 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 				/*rule1*/
 				n1++;
 				q1 += boids[i].vctr.normalized();
-				if (boid.id == 0)
-				{
-					boids[i].setColor(1.0, 1.0, 0.0);
-				}
+				//				if (boid.id == 0)
+				//				{
+				//					boids[i].setColor(1.0, 1.0, 0.0);
+				//				}
 			}
 			if (dist - 2.0 * BOID_SIZE < R_2)
 			{
 				/*rule2*/
 				n2++;
 				q2 += Eigen::Vector3d(boids[i].x - boid.x, boids[i].y - boid.y, boids[i].z - boid.z) / dist / dist * R_2;
-				if (boid.id == 0)
-				{
-					boids[i].setColor(1.0, 1.0, 0.0);
-				}
+				//				if (boid.id == 0)
+				//				{
+				//					boids[i].setColor(1.0, 1.0, 0.0);
+				//				}
 			}
 			if (dist - 2.0 * BOID_SIZE < R_3)
 			{
 				/*rule3*/
 				n3++;
 				q3 += Eigen::Vector3d(boids[i].x - boid.x, boids[i].y - boid.y, boids[i].z - boid.z) / dist / dist * R_3;
-				if (boid.id == 0)
-				{
-					boids[i].setColor(0.0, 1.0, 0.0);
-				}
+				//				if (boid.id == 0)
+				//				{
+				//					boids[i].setColor(0.0, 1.0, 0.0);
+				//				}
 			}
 		}
 	}
@@ -478,10 +478,10 @@ void timer(int value)
 	for (int i = 0; i < boids.size(); i++)
 	{
 		boids[i].updatePosition();
-		if (i != 0)
-		{
-			boids[i].setColor(1.0, 1.0, 1.0);
-		}
+		//		if (i != 0)
+		//		{
+		//			boids[i].setColor(1.0, 1.0, 1.0);
+		//		}
 		findGrid(i, boids[i].x, boids[i].y, boids[i].z);
 	}
 	updateGrids();
@@ -531,10 +531,10 @@ int main(int argc, char* argv[])
 	{
 		boids.push_back(BaseBoid((double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - WALL_SIZE - BOID_SIZE) * 2.0 / RAND_MAX, (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - WALL_SIZE - BOID_SIZE) * 2.0 / RAND_MAX, (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - WALL_SIZE - BOID_SIZE) * 2.0 / RAND_MAX, (double(rand()) / RAND_MAX) * 2.0 * M_PI, (double(rand()) / RAND_MAX) * 2.0 * M_PI, BOID_SPEED, i));
 		findGrid(i, boids[i].x, boids[i].y, boids[i].z);
-		if (i == 0)
-		{
-			boids[i].setColor(1.0, 0.0, 0.0);
-		}
+		//		if (i == 0)
+		//		{
+		//			boids[i].setColor(1.0, 0.0, 0.0);
+		//		}
 	}
 	for (int i = 0; i < BLOCK_NO; ++i)
 	{
