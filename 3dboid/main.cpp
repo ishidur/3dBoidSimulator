@@ -33,7 +33,7 @@ double calcDist(double x1, double y1, double z1, double x2, double y2, double z2
 }
 
 //[x][y][z]
-Grid grids[GRID_NO + 2][GRID_NO + 2][GRID_NO + 2];
+Grid grids[GRID_NO + NEAR_GRID_NO * 2][GRID_NO + NEAR_GRID_NO * 2][GRID_NO + NEAR_GRID_NO * 2];
 
 std::vector<Block> blocks;
 
@@ -41,11 +41,11 @@ std::vector<Block> blocks;
 std::vector<int> getAroundGridBoids(int id, int grid_x, int grid_y, int grid_z)
 {
 	std::vector<int> indexes = grids[grid_x][grid_y][grid_z].boidIndexes;
-	for (int i = -1; i <= 1; ++i)
+	for (int i = -NEAR_GRID_NO; i <= NEAR_GRID_NO; ++i)
 	{
-		for (int j = -1; j <= 1; ++j)
+		for (int j = -NEAR_GRID_NO + abs(i); j <= NEAR_GRID_NO - abs(i); ++j)
 		{
-			for (int k = -1; k <= 1; ++k)
+			for (int k = -NEAR_GRID_NO + abs(i) + abs(j); k <= NEAR_GRID_NO - abs(i) - abs(j); ++k)
 			{
 				indexes.insert(indexes.end(), grids[grid_x + i][grid_y + j][grid_z + k].boidIndexes.begin(), grids[grid_x + i][grid_y + j][grid_z + k].boidIndexes.end());
 			}
@@ -199,14 +199,14 @@ void createGrids()
 	double width = 2.0 * BOUNDARY / GRID_NO;
 	double left;
 	double front;
-	double top = -BOUNDARY - width;
-	for (int i = 0; i < GRID_NO + 2; ++i)
+	double top = -BOUNDARY - double(NEAR_GRID_NO) * width;
+	for (int i = 0; i < GRID_NO + NEAR_GRID_NO * 2; ++i)
 	{
-		left = -BOUNDARY - width;
-		for (int j = 0; j < GRID_NO + 2; ++j)
+		left = -BOUNDARY - double(NEAR_GRID_NO) * width;
+		for (int j = 0; j < GRID_NO + NEAR_GRID_NO * 2; ++j)
 		{
-			front = -BOUNDARY - width;
-			for (int k = 0; k < GRID_NO + 2; ++k)
+			front = -BOUNDARY - double(NEAR_GRID_NO) * width;
+			for (int k = 0; k < GRID_NO + NEAR_GRID_NO * 2; ++k)
 			{
 				grids[i][j][k] = Grid(top, top + width, left, left + width, front, front + width);
 				front += width;
@@ -220,11 +220,11 @@ void createGrids()
 //this function needs grids, boids: ”ñŒø—¦‚©‚à
 void updateGrids()
 {
-	for (int i = 1; i <= GRID_NO; i++)
+	for (int i = NEAR_GRID_NO; i <= GRID_NO + NEAR_GRID_NO; i++)
 	{
-		for (int j = 1; j <= GRID_NO; j++)
+		for (int j = NEAR_GRID_NO; j <= GRID_NO + NEAR_GRID_NO; j++)
 		{
-			for (int k = 1; k <= GRID_NO; ++k)
+			for (int k = NEAR_GRID_NO; k <= GRID_NO + NEAR_GRID_NO; ++k)
 			{
 				std::vector<int> indexes = grids[i][j][k].boidIndexes;
 				for (auto n : indexes)
@@ -243,9 +243,9 @@ void updateGrids()
 void findGrid(int index, double x, double y, double z)
 {
 	double width = 2.0 * BOUNDARY / GRID_NO;
-	int gridx = int(ceil((BOUNDARY + x) / width));
-	int gridy = int(ceil((BOUNDARY + y) / width));
-	int gridz = int(ceil((BOUNDARY + z) / width));
+	int gridx = int(ceil((BOUNDARY + x) / width)) - 1 + NEAR_GRID_NO;
+	int gridy = int(ceil((BOUNDARY + y) / width)) - 1 + NEAR_GRID_NO;
+	int gridz = int(ceil((BOUNDARY + z) / width)) - 1 + NEAR_GRID_NO;
 	grids[gridx][gridy][gridz].addBoidByIndex(index);
 	boids[index].grid_x = gridx;
 	boids[index].grid_y = gridy;
@@ -256,14 +256,14 @@ void findGrid(int index, double x, double y, double z)
 void whereBlock(int index, double x, double y, double z)
 {
 	double width = 2.0 * BOUNDARY / GRID_NO;
-	int gridx = int(ceil((BOUNDARY + x) / width));
-	int gridy = int(ceil((BOUNDARY + y) / width));
-	int gridz = int(ceil((BOUNDARY + z) / width));
-	for (int i = -1; i <= 1; ++i)
+	int gridx = int(ceil((BOUNDARY + x) / width)) - 1 + NEAR_GRID_NO;
+	int gridy = int(ceil((BOUNDARY + y) / width)) - 1 + NEAR_GRID_NO;
+	int gridz = int(ceil((BOUNDARY + z) / width)) - 1 + NEAR_GRID_NO;
+	for (int i = -NEAR_GRID_NO; i <= NEAR_GRID_NO; ++i)
 	{
-		for (int j = -1; j <= 1; ++j)
+		for (int j = -NEAR_GRID_NO + abs(i); j <= NEAR_GRID_NO - abs(i); ++j)
 		{
-			for (int k = -1; k <= 1; ++k)
+			for (int k = -NEAR_GRID_NO + abs(i) + abs(j); k <= NEAR_GRID_NO - abs(i) - abs(j); ++k)
 			{
 				grids[gridx + i][gridy + j][gridz + k].addBlockByIndex(index);
 			}
@@ -274,15 +274,15 @@ void whereBlock(int index, double x, double y, double z)
 void removeBlock(int index, double x, double y, double z)
 {
 	double width = 2.0 * BOUNDARY / GRID_NO;
-	int gridx = int(ceil((BOUNDARY + x) / width));
-	int gridy = int(ceil((BOUNDARY + y) / width));
-	int gridz = int(ceil((BOUNDARY + z) / width));
+	int gridx = int(ceil((BOUNDARY + x) / width)) - 1 + NEAR_GRID_NO;
+	int gridy = int(ceil((BOUNDARY + y) / width)) - 1 + NEAR_GRID_NO;
+	int gridz = int(ceil((BOUNDARY + z) / width)) - 1 + NEAR_GRID_NO;
 
-	for (int i = -1; i <= 1; ++i)
+	for (int i = -NEAR_GRID_NO; i <= NEAR_GRID_NO; ++i)
 	{
-		for (int j = -1; j <= 1; ++j)
+		for (int j = -NEAR_GRID_NO + abs(i); j <= NEAR_GRID_NO - abs(i); ++j)
 		{
-			for (int k = -1; k <= 1; ++k)
+			for (int k = -NEAR_GRID_NO + abs(i) + abs(j); k <= NEAR_GRID_NO - abs(i) - abs(j); ++k)
 			{
 				grids[gridx + i][gridy + j][gridz + k].deleteBlockByIndex(index);
 			}
@@ -293,11 +293,11 @@ void removeBlock(int index, double x, double y, double z)
 
 void removeAllBlocks()
 {
-	for (int i = 0; i < GRID_NO + 2; ++i)
+	for (int i = 0; i < GRID_NO + NEAR_GRID_NO * 2; ++i)
 	{
-		for (int j = 0; j < GRID_NO + 2; ++j)
+		for (int j = 0; j < GRID_NO + NEAR_GRID_NO * 2; ++j)
 		{
-			for (int k = 0; k < GRID_NO + 2; ++k)
+			for (int k = 0; k < GRID_NO + NEAR_GRID_NO * 2; ++k)
 			{
 				grids[i][j][k].deleteAllBlocks();
 			}
@@ -309,9 +309,9 @@ void removeAllBlocks()
 int findDuplicateBlock(double x, double y, double z)
 {
 	double width = 2.0 * BOUNDARY / GRID_NO;
-	int gridx = int(ceil((BOUNDARY + x) / width));
-	int gridy = int(ceil((BOUNDARY + y) / width));
-	int gridz = int(ceil((BOUNDARY + z) / width));
+	int gridx = int(ceil((BOUNDARY + x) / width)) - 1 + NEAR_GRID_NO;
+	int gridy = int(ceil((BOUNDARY + y) / width)) - 1 + NEAR_GRID_NO;
+	int gridz = int(ceil((BOUNDARY + z) / width)) - 1 + NEAR_GRID_NO;
 	for (auto i : grids[gridx][gridy][gridz].blockIndexes)
 	{
 		double dist = calcDist(x, y, z, blocks[i].x, blocks[i].y, blocks[i].z);

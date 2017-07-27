@@ -1,6 +1,7 @@
 #pragma once
 /*prameters*/
-#define GRID_NO 4 //number of grid; boid can see around 1 grid
+#define GRID_NO 6 //number of grid; boid can see around 1 grid
+#define NEAR_GRID_NO 3 //number of grid; boid can see around 1 grid
 #define BOID_SIZE 5.0 //size of boid
 #define WALL_SIZE 5.0 //size of wall
 #define BLOCK_SIZE 10.0 //size of block
