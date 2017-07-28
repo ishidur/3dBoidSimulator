@@ -9,12 +9,13 @@
 #include <algorithm>
 #include <iostream>
 #include "Grid.h"
+#include "ppl.h"
 #include "BaseBoid.h"
 #include "Direction.h"
 #include "Block.h"
 #include "Eigen/Core"
 
-int time = 0; //time
+int tim = 0; //tim
 bool isPress = false;
 double mouseX = 0.0;
 double mouseY = 0.0;
@@ -220,7 +221,7 @@ void createGrids()
 //this function needs grids, boids: 非効率かも
 void updateGrids()
 {
-	for (int i = NEAR_GRID_NO; i <= GRID_NO + NEAR_GRID_NO; i++)
+	Concurrency::parallel_for(NEAR_GRID_NO, GRID_NO + NEAR_GRID_NO, 1, [](int i)
 	{
 		for (int j = NEAR_GRID_NO; j <= GRID_NO + NEAR_GRID_NO; j++)
 		{
@@ -236,7 +237,7 @@ void updateGrids()
 				}
 			}
 		}
-	}
+	});
 }
 
 //this function needs grids, boids
@@ -469,30 +470,42 @@ void key(unsigned char key, int x, int y)
 	}
 }
 
+void findGrids()
+{
+	for (int i = 0; i < boids.size(); ++i)
+	{
+		findGrid(i, boids[i].x, boids[i].y, boids[i].z);
+	}
+}
+
 void timer(int value)
 {
-	//	if (time % 10 == 0)
+	//	if (tim % 10 == 0)
 	//	{
-	//		cout << time / 10 << endl;
+	//		cout << tim / 10 << endl;
 	//	}
-	for (int i = 0; i < boids.size(); i++)
+	clock_t start = clock(); // start
+
+	Concurrency::parallel_for<int>(0, boids.size(), 1, [](int i)
 	{
 		boids[i].updatePosition();
 		if (i != 0)
 		{
 			boids[i].setColor(1.0, 1.0, 1.0);
 		}
-		findGrid(i, boids[i].x, boids[i].y, boids[i].z);
-	}
+	});
+	findGrids();
 	updateGrids();
-	for (int i = 0; i < boids.size(); i++)
+	Concurrency::parallel_for<int>(0, boids.size(), 1, [](int i)
 	{
 		//boid速度ベクトルの計算部分
 		boids[i] = updateSpeedAndAngle(boids[i]);
-	}
+	});
 	glutPostRedisplay();
-	time++;
-	glutTimerFunc(FLAME_RATE, timer, time);
+	tim++;
+	clock_t end = clock(); // end
+	std::cout << "duration = " << float(end - start) / CLOCKS_PER_SEC << "sec\r" << std::flush;
+	glutTimerFunc(FLAME_RATE, timer, tim);
 }
 
 
@@ -545,7 +558,7 @@ int main(int argc, char* argv[])
 	updateGrids();
 	glutDisplayFunc(display);
 	glutReshapeFunc(resize);
-	glutTimerFunc(FLAME_RATE, timer, time);
+	glutTimerFunc(FLAME_RATE, timer, tim);
 	glutMainLoop();
 	return 0;
 }
