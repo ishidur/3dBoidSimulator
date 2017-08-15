@@ -1,8 +1,6 @@
 ﻿#include "stdafx.h"
 #include "BaseBoid.h"
-#include <corecrt_math_defines.h>
 #include "Direction.h"
-
 double checkBoundary(double pos)
 {
 	if (pos > BOUNDARY - WALL_SIZE)

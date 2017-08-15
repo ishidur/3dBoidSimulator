@@ -9,10 +9,11 @@
 
 #include <stdio.h>
 #include <tchar.h>
-#include <GL/glut.h>
+#include <GL/glew.h>
 
 #include <GL/glut.h>
 #include "parameters.h" //import common parameters
+#define _USE_MATH_DEFINES
 
 
 // TODO: プログラムに必要な追加ヘッダーをここで参照してください
