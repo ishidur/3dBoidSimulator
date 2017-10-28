@@ -47,7 +47,8 @@ std::vector<int> getAroundGridBoids(int id, int grid_x, int grid_y, int grid_z)
 		{
 			for (int k = -NEAR_GRID_NO + abs(i) + abs(j); k <= NEAR_GRID_NO - abs(i) - abs(j); ++k)
 			{
-				indexes.insert(indexes.end(), grids[grid_x + i][grid_y + j][grid_z + k].boidIndexes.begin(), grids[grid_x + i][grid_y + j][grid_z + k].boidIndexes.end());
+				indexes.insert(indexes.end(), grids[grid_x + i][grid_y + j][grid_z + k].boidIndexes.begin(),
+				               grids[grid_x + i][grid_y + j][grid_z + k].boidIndexes.end());
 			}
 		}
 	}
@@ -175,7 +176,7 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 	else if (boid.y <= -bound)
 	{
 		wallRepel.y() = -1.0 / (wall + boid.y);
-	};
+	}
 	if (boid.z >= bound)
 	{
 		wallRepel.z() = 1.0 / (wall - boid.z);
@@ -184,7 +185,9 @@ BaseBoid updateSpeedAndAngle(BaseBoid& boid)
 	{
 		wallRepel.z() = -1.0 / (wall + boid.z);
 	}
-	Eigen::Vector3d V = ALPHA_1 * q1.normalized() + ALPHA_2 * q2 - ALPHA_3 * q3 - ALPHA_4 * q4 + ALPHA_5 * boid.vctr.normalized() - REPEL_WALL_WEIGHT * wallRepel;
+	Eigen::Vector3d V = ALPHA_1 * q1.normalized() + ALPHA_2 * q2 - ALPHA_3 * q3 - ALPHA_4 * q4 + ALPHA_5 * boid.vctr.
+	                                                                                                            normalized()
+		- REPEL_WALL_WEIGHT * wallRepel;
 	Direction dir = Direction(V);
 	boid.angleY = dir.angleY;
 	boid.angleZ = dir.angleZ;
@@ -463,7 +466,10 @@ void key(unsigned char key, int x, int y)
 		removeAllBlocks();
 		for (int i = 0; i < BLOCK_NO; ++i)
 		{
-			blocks.push_back(Block((double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE - BOID_SIZE) * 2.0 / RAND_MAX, (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE - BOID_SIZE) * 2.0 / RAND_MAX, (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE - BOID_SIZE) * 2.0 / RAND_MAX, BLOCK_SIZE));
+			blocks.push_back(Block((double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE - BOID_SIZE) * 2.0 / RAND_MAX,
+			                       (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE - BOID_SIZE) * 2.0 / RAND_MAX,
+			                       (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE - BOID_SIZE) * 2.0 / RAND_MAX,
+			                       BLOCK_SIZE));
 			whereBlock(i, blocks[i].x, blocks[i].y, blocks[i].z);
 		}
 	}
@@ -541,7 +547,11 @@ int main(int argc, char* argv[])
 
 	for (int i = 0; i < BOIDS_NO; i++)
 	{
-		boids.push_back(BaseBoid((double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - WALL_SIZE - BOID_SIZE) * 2.0 / RAND_MAX, (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - WALL_SIZE - BOID_SIZE) * 2.0 / RAND_MAX, (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - WALL_SIZE - BOID_SIZE) * 2.0 / RAND_MAX, (double(rand()) / RAND_MAX) * 2.0 * M_PI, (double(rand()) / RAND_MAX) * 2.0 * M_PI, BOID_SPEED, i));
+		boids.push_back(BaseBoid((double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - WALL_SIZE - BOID_SIZE) * 2.0 / RAND_MAX,
+		                         (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - WALL_SIZE - BOID_SIZE) * 2.0 / RAND_MAX,
+		                         (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - WALL_SIZE - BOID_SIZE) * 2.0 / RAND_MAX,
+		                         (double(rand()) / RAND_MAX) * 2.0 * M_PI, (double(rand()) / RAND_MAX) * 2.0 * M_PI,
+		                         BOID_SPEED, i));
 		findGrid(i, boids[i].x, boids[i].y, boids[i].z);
 		if (i == 0)
 		{
@@ -550,7 +560,9 @@ int main(int argc, char* argv[])
 	}
 	for (int i = 0; i < BLOCK_NO; ++i)
 	{
-		blocks.push_back(Block((double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE) * 2.0 / RAND_MAX, (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE) * 2.0 / RAND_MAX, (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE) * 2.0 / RAND_MAX, BLOCK_SIZE));
+		blocks.push_back(Block((double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE) * 2.0 / RAND_MAX,
+		                       (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE) * 2.0 / RAND_MAX,
+		                       (double(rand()) - RAND_MAX / 2.0) * (BOUNDARY - BLOCK_SIZE) * 2.0 / RAND_MAX, BLOCK_SIZE));
 		whereBlock(i, blocks[i].x, blocks[i].y, blocks[i].z);
 	}
 

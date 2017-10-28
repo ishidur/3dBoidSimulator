@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "BaseBoid.h"
 #include "Direction.h"
+
 double checkBoundary(double pos)
 {
 	if (pos > BOUNDARY - WALL_SIZE)
@@ -35,7 +36,8 @@ BaseBoid::BaseBoid(double _x, double _y, double _z, double _angleY, double _angl
 	angleY = _angleY;
 	angleZ = _angleZ;
 	speed = _speed;
-	vctr = Eigen::Vector3d(cos(_angleY) * cos(_angleZ) * _speed, sin(_angleZ) * _speed, sin(_angleY) * cos(_angleZ) * _speed);
+	vctr = Eigen::Vector3d(cos(_angleY) * cos(_angleZ) * _speed, sin(_angleZ) * _speed,
+	                       sin(_angleY) * cos(_angleZ) * _speed);
 }
 
 void BaseBoid::setColor(double red, double green, double blue)

@@ -31,7 +31,8 @@ public:
 	 * \param speed 
 	 * \param id 
 	 */
-	BaseBoid(double x = 0.0, double y = 0.0, double _z = 0.0, double angleY = 0.0, double angleZ = 0.0, double speed = 0.0, int id = -1);
+	BaseBoid(double x = 0.0, double y = 0.0, double _z = 0.0, double angleY = 0.0, double angleZ = 0.0, double speed = 0.0,
+	         int id = -1);
 
 	/**
 	* \brief
