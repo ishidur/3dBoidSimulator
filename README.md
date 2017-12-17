@@ -1,7 +1,11 @@
-# 3dBoidSimulator
-### Visual Studio/OpenGL/3D Boid Simulator  
-#### 使用したライブラリ
-描画用に[freeglut](http://freeglut.sourceforge.net/ "freeglut")，ベクトル計算に[Eigen](http://eigen.tuxfamily.org/ "Eigen")を使用している．
+# 3d Boid Simulator Project
+## Enviroment  
+|package|version|
+|:--|:--:|
+|Windows Target Platform Version|8.1|
+|Platform Toolset|Visual Studio 2015 (v140)|
+|NupenGL Core|0.1.0.1|
+|Eigen|3.3.4|
 
 #### Boidの動きについて
 Boidの進行方向を決める要素としては5つがあリ，
