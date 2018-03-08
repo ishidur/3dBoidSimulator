@@ -4,8 +4,8 @@
 class Direction
 {
 public:
-	double angleY;
-	double angleZ;
+	double angle_y;
+	double angle_z;
 	double x;
 	double y;
 	double z;
@@ -14,10 +14,10 @@ public:
 
 	/**
 	 * \brief 
-	 * \param angleY 
-	 * \param angleZ 
+	 * \param angle_y 
+	 * \param angle_z 
 	 */
-	Direction(double angleY, double angleZ);
+	Direction(double angle_y, double angle_z);
 	/**
 	 * \brief 
 	 * \param x 

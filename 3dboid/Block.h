@@ -28,7 +28,7 @@ public:
 	* \param green
 	* \param blue
 	*/
-	void setColor(double red, double green, double blue);
-	void drawBlock();
-	void setDisabled();
+	void set_color(double red, double green, double blue);
+	void draw_block();
+	void set_disabled();
 };

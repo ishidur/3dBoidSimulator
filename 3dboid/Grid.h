@@ -10,8 +10,8 @@ public:
 	double bottom;
 	double front;
 	double back;
-	std::vector<int> boidIndexes;
-	std::vector<int> blockIndexes;
+	std::vector<int> boid_indexes;
+	std::vector<int> block_indexes;
 
 	/**
 	* \brief
@@ -26,30 +26,30 @@ public:
 	* \brief
 	* \param index
 	*/
-	void addBoidByIndex(int index);
+	void add_boid_by_index(int index);
 	/**
 	* \brief
 	* \param index
 	*/
-	void deleteBoidByIndex(int index);
+	void delete_boid_by_index(int index);
 	/**
 	* \brief
 	* \param index
 	* \return
 	*/
-	bool findBoidByIndex(int index);
+	bool find_boid_by_index(int index);
 	/**
 	* \brief
 	* \param index
 	*/
-	void addBlockByIndex(int index);
+	void add_block_by_index(int index);
 	/**
 	* \brief
 	* \param index
 	*/
-	void deleteBlockByIndex(int index);
+	void delete_block_by_index(int index);
 	/**
 	* \brief
 	*/
-	void deleteAllBlocks();
+	void delete_all_blocks();
 };

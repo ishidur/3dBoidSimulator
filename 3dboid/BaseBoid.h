@@ -13,8 +13,8 @@ public:
 	double x; //_x-position
 	double y; //y-position
 	double z; //z-position
-	double angleY; //radian angle: 0 vector is (0, 1)
-	double angleZ; //radian angle: 0 vector is (0, 1)
+	double angle_y; //radian angle: 0 vector is (0, 1)
+	double angle_z; //radian angle: 0 vector is (0, 1)
 	Eigen::Vector3d vctr; //
 	double speed; // speed
 	int grid_y = -1; //grid address y
@@ -26,12 +26,12 @@ public:
 	 * \brief 
 	 * \param x 
 	 * \param y 
-	 * \param angleY 
-	 * \param angleZ 
+	 * \param angle_y 
+	 * \param angle_z 
 	 * \param speed 
 	 * \param id 
 	 */
-	BaseBoid(double x = 0.0, double y = 0.0, double _z = 0.0, double angleY = 0.0, double angleZ = 0.0, double speed = 0.0,
+	BaseBoid(double x = 0.0, double y = 0.0, double _z = 0.0, double angle_y = 0.0, double angle_z = 0.0, double speed = 0.0,
 	         int id = -1);
 
 	/**
@@ -40,18 +40,18 @@ public:
 	* \param green
 	* \param blue
 	*/
-	void setColor(double red, double green, double blue);
+	void set_color(double red, double green, double blue);
 
-	void drawBaseBoid();
+	void draw_base_boid();
 
-	void updatePosition();
+	void update_position();
 
 	/**
 	* \brief
 	* \param x
 	* \param y
-	* \param viewAngle
+	* \param view_angle
 	* \return
 	*/
-	bool isVisible(double x, double y, double z, double viewAngle);
+	bool is_visible(double x, double y, double z, double view_angle);
 };

@@ -2,25 +2,16 @@
 #include "BaseBoid.h"
 #include "Direction.h"
 
-double checkBoundary(double pos)
+static double check_boundary(double pos)
 {
-	if (pos > BOUNDARY - WALL_SIZE)
-	{
-		pos = BOUNDARY - WALL_SIZE;
-	}
-	else if (pos < -BOUNDARY + WALL_SIZE)
-	{
-		pos = -BOUNDARY + WALL_SIZE;
-	}
+	if (pos > BOUNDARY - WALL_SIZE) { pos = BOUNDARY - WALL_SIZE; }
+	else if (pos < -BOUNDARY + WALL_SIZE) { pos = -BOUNDARY + WALL_SIZE; }
 	return pos;
 }
 
-double radianToDegree(double rad)
-{
-	return rad * 180.0 / M_PI;
-}
+double radian_to_degree(double rad) { return rad * 180.0 / M_PI; }
 
-void renderBoid()
+void render_boid()
 {
 	//	glRotated(90.0, 0.0, 1.0, 0.0);
 	//	glutSolidCone(0.4 * BOID_SIZE * sqrt(3.0) / 2.0, BOID_SIZE, 10, 10);
@@ -33,49 +24,46 @@ BaseBoid::BaseBoid(double _x, double _y, double _z, double _angleY, double _angl
 	x = _x;
 	y = _y;
 	z = _z;
-	angleY = _angleY;
-	angleZ = _angleZ;
+	angle_y = _angleY;
+	angle_z = _angleZ;
 	speed = _speed;
 	vctr = Eigen::Vector3d(cos(_angleY) * cos(_angleZ) * _speed, sin(_angleZ) * _speed,
 	                       sin(_angleY) * cos(_angleZ) * _speed);
 }
 
-void BaseBoid::setColor(double red, double green, double blue)
+void BaseBoid::set_color(double red, double green, double blue)
 {
 	r = red;
 	g = green;
 	b = blue;
 }
 
-void BaseBoid::drawBaseBoid()
+void BaseBoid::draw_base_boid()
 {
-	GLfloat color[] = {GLfloat(r),GLfloat(g),GLfloat(b),1.0};
+	GLfloat color[] = {GLfloat(r), GLfloat(g), GLfloat(b), 1.0};
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 	glColor3d(r, g, b);
 	glPushMatrix();
 	glTranslated(x, y, z);
-	glRotated(radianToDegree(angleY), 0.0, -1.0, 0.0);
-	glRotated(radianToDegree(angleZ), 0.0, 0.0, 1.0);
-	renderBoid();
+	glRotated(radian_to_degree(angle_y), 0.0, -1.0, 0.0);
+	glRotated(radian_to_degree(angle_z), 0.0, 0.0, 1.0);
+	render_boid();
 	glPopMatrix();
 }
 
-void BaseBoid::updatePosition()
+void BaseBoid::update_position()
 {
 	x += vctr.x() * FLAME_RATE / 1000.0;
 	y += vctr.y() * FLAME_RATE / 1000.0;
 	z += vctr.z() * FLAME_RATE / 1000.0;
-	x = checkBoundary(x);
-	y = checkBoundary(y);
-	z = checkBoundary(z);
+	x = check_boundary(x);
+	y = check_boundary(y);
+	z = check_boundary(z);
 }
 
-double inner(Eigen::Vector3d a, Eigen::Vector3d b)
-{
-	return a.x() * b.x() + a.y() * b.y() + a.z() * b.z();
-}
+double inner(Eigen::Vector3d a, Eigen::Vector3d b) { return a.x() * b.x() + a.y() * b.y() + a.z() * b.z(); }
 
-bool BaseBoid::isVisible(double _x, double _y, double _z, double _viewAngle)
+bool BaseBoid::is_visible(double _x, double _y, double _z, double _viewAngle)
 {
 	double dx = _x - x;
 	double dy = _y - y;
@@ -83,9 +71,6 @@ bool BaseBoid::isVisible(double _x, double _y, double _z, double _viewAngle)
 	Eigen::Vector3d dist = Eigen::Vector3d(dx, dy, dz);
 	double innertial = inner(vctr.normalized(), dist.normalized());
 	double angle = acos(innertial);
-	if (angle > _viewAngle)
-	{
-		return false;
-	}
+	if (angle > _viewAngle) { return false; }
 	return true;
 }
