@@ -12,7 +12,6 @@
 #include "BaseBoid.h"
 #include "Direction.h"
 #include "Block.h"
-#include "Eigen/Core"
 
 int tim = 0; //tim
 bool is_press = false;

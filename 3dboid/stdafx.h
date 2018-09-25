@@ -16,3 +16,4 @@
 #include <GL/glut.h>
 #include "parameters.h" //import common parameters
 #define _USE_MATH_DEFINES
+#include "Eigen/Core"
